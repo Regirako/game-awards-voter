@@ -1,4 +1,4 @@
-// script.js - Lógica da votação por categoria
+// script.js - Lógica da votação por categoria (ATUALIZADO)
 
 document.addEventListener('DOMContentLoaded', function() {
     // Elementos do DOM
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentCategoryNumber = document.getElementById('currentCategoryNumber');
     const totalCategoriesSpan = document.getElementById('totalCategories');
     
-    // MAPA DE IMAGENS DOS JOGOS (ATUALIZADO COM TODAS AS URLs)
+    // MAPA DE IMAGENS DOS JOGOS (ATUALIZADO COM NOVAS URLs)
     const gameImages = {
         'Clair Obscur: Expedition 33': 'https://i.imgur.com/BdhoFqu.png',
         'Death Stranding 2: On the Beach': 'https://i.ytimg.com/vi/6cs-A1rNvEE/maxresdefault.jpg',
@@ -90,481 +90,482 @@ document.addEventListener('DOMContentLoaded', function() {
         'Marvel Rivals': 'https://sm.ign.com/ign_br/news/m/marvel-riv/marvel-rivals-announced-a-6v6-superhero-team-based-free-to-p_8f6k.jpg',
         
         // NOVAS IMAGENS ADICIONADAS
-        "Gen.G - League of Legends": "https://geng.gg/cdn/shop/files/06_2490_R4.jpg?v=1736792371&width=3000",
-        "NRG - Valorant": "https://noticias.maisesports.com.br/wp-content/uploads/2025/10/vrg-campea-valorant-champions-2025.jpg",
-        "Team Falcons - Dota 2": "https://i.ytimg.com/vi/xwY_U5EL55w/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDdhvASTy1mHKCnJAlf_bb0_mhxcg",
-        "Team Liquid PH - Mobile Legends: Bang Bang": "https://liquipedia.net/commons/images/thumb/9/94/Team_Liquid_PH_at_MSC_2025.jpg/675px-Team_Liquid_PH_at_MSC_2025.jpg",
-        "Team Vitality - Counter Strike 2": "https://vitality.gg/cdn/shop/articles/CS2_BLAST_AustinMajor_champions_CP_32bf2ec4-84c3-41e0-922f-ef766f1dc0d5.jpg?v=1751307798",
-        "Brawk": "https://www.hotspawn.com/wp-content/uploads/2025/10/NRG-brawk-Odin-the-MVP-at-VALORANT-Champions-2025-1125x633.jpg",
-        "Chovy": "https://noticias.maisesports.com.br/wp-content/uploads/2023/10/chovy-worlds-2023.jpg",
-        "Forsaken": "https://media.suara.com/pictures/1600x840/2025/09/16/28598-jason-f0rsaken-susanto-pro-player-valorant.jpg",
-        "Kakeru": "https://liquipedia.net/commons/images/0/07/Kakeru_Red_Bull_Kumite_2025.jpg",
-        "Menard": "https://liquipedia.net/commons/images/thumb/a/ab/MenaRD_EVO_2025.jpg/600px-MenaRD_EVO_2025.jpg",
-        "Zywoo": "https://liquipedia.net/commons/images/thumb/f/ff/ZywOo_at_BLAST_Open_Spring_2025.jpg/600px-ZywOo_at_BLAST_Open_Spring_2025.jpg",
-        "Counter Strike 2": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/header.jpg?t=1749053861",
-        "Dota 2": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/header.jpg?t=1762820658",
-        "League of Legends": "https://s2.glbimg.com/cg0Yf7KUqt4wFsxoPyeAIUhZMv8=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2019/Y/L/lIgTd8SVCHPu8lGXmbJg/novo-logo-league-of-legends.jpg",
-        "Mobile Legends: Bang Bang": "https://t2.tudocdn.net/622409?w=1920",
-        "Valorant": "https://cdn.sortiraparis.com/images/1001/66131/1103306-valorant-le-jeu-video-signe-riot-games-est-disponible.jpg",
-        "FC 26": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405690/2d96aa1b06e453cd62dae9029d412f19e61932c3/header.jpg?t=1761904811",
-        "F1 25": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3059520/37f833ca5bd3d5c3eec2b411131f3e00f580bbe7/header.jpg?t=1762963192",
-        "Rematch": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2138720/header.jpg?t=1761052542",
-        "Caedrel": "https://liquipedia.net/commons/images/6/69/Caedrel_Worlds_2024.jpg",
-        "Kai Cenat": "https://gamohol.com/wp-content/uploads/2023/02/kai-cenat.webp",
-        "Moistcr1tikal": "https://win.gg/wp-content/uploads/2021/12/Moistcritical.jpg.webp",
-        "Sakura Miko": "https://cdn.prod.website-files.com/5d7e8885cad5174a2fcb98d7/64ad80a19abfb265fd9dfe81_Sakura%2520Miko.jpeg",
-        "The Burnt Peanut": "https://www.indy100.com/media-library/the-burnt-peanut-won-best-vtuber-at-the-streamer-awards-2025.jpg?id=62291768&width=1200&height=600&coordinates=0%2C11%2C0%2C15",
-        "Christopher Larkin - Hollow Knight: Silksong": "https://f4.bcbits.com/img/0023421569_10.jpg",
-        "Darren Korb - Hades 2": "https://cdn.shopify.com/s/files/1/1226/8792/files/Origins.png?v=1611406904",
-        "Lorien Testard - Clair Obscur: Expedition 33": "https://live-production.wcms.abc-cdn.net.au/1ff88334db86c8fc11b717e42fcd6cd3?impolicy=wcms_crop_resize&cropH=3290&cropW=4935&xPos=0&yPos=90&width=862&height=575",
-        "Toma Otowa - Ghost of Yotei": "https://m.media-amazon.com/images/M/MV5BMGI3OWRiNGUtNWZkNi00YTNiLWEwZjktZGQ2OGUyMDBkOGFlXkEyXkFqcGc@._V1_.jpg",
-        "Woodkid & Ludvig Forssell - Death Stranding 2: On the Beach": "https://cdn.shopify.com/s/files/1/0703/5217/5391/files/hideo-kojima-teams-up-with-woodkid-for-death-stranding-2-on-v0-bxqhxnuhpbbe1-1.jpg?v=1751285799",
-        "Ben Starr - Clair Obscur: Expedition 33": "https://external-preview.redd.it/ben-starr-as-clive-you-will-never-understand-the-burden-of-v0-zziXFu35sUl8xnnSNum5XxThK_fIfSW8RKNaLfJvKZw.png?format=pjpg&auto=webp&s=6ddc6d3b68bcc6a23e61c3707022ca3cc4242a90",
-        "Charlie Cox": "https://www.hollywoodreporter.com/wp-content/uploads/2025/02/GettyImages-2201803981.jpg?crop=0px%2C269px%2C5000px%2C2797px&resize=2000%2C1126",
-        "Erika Ishii": "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2024/09/erika-ishii.jpg",
-        "Jennifer English": "https://m.media-amazon.com/images/M/MV5BZjg0MTRkMzMtZGNlNi00NjA5LTlkZTgtZDdkZDJiOTRkOTIyXkEyXkFqcGc@._V1_.jpg",
-        "Konatsu Kato": "https://m.media-amazon.com/images/M/MV5BYmZlZjJhYTAtNzNjMi00YmMxLWFhNjEtMDFhMTg0YWMxZGE1XkEyXkFqcGc@._V1_.jpg",
-        "Troy Baker": "https://m.media-amazon.com/images/M/MV5BZjA1YTcxNjktZDhhZi00NDhmLTkyZTYtZWY4OWVmZjA1ZTI4XkEyXkFqcGc@._V1_.jpg"
+        'Gen.G - League of Legends': 'https://geng.gg/cdn/shop/files/06_2490_R4.jpg?v=1736792371&width=3000',
+        'NRG - Valorant': 'https://noticias.maisesports.com.br/wp-content/uploads/2025/10/vrg-campea-valorant-champions-2025.jpg',
+        'Team Falcons - Dota 2': 'https://i.ytimg.com/vi/xwY_U5EL55w/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDdhvASTy1mHKCnJAlf_bb0_mhxcg',
+        'Team Liquid PH - Mobile Legends: Bang Bang': 'https://liquipedia.net/commons/images/thumb/9/94/Team_Liquid_PH_at_MSC_2025.jpg/675px-Team_Liquid_PH_at_MSC_2025.jpg',
+        'Team Vitality - Counter Strike 2': 'https://vitality.gg/cdn/shop/articles/CS2_BLAST_AustinMajor_champions_CP_32bf2ec4-84c3-41e0-922f-ef766f1dc0d5.jpg?v=1751307798',
+        'Brawk': 'https://www.hotspawn.com/wp-content/uploads/2025/10/NRG-brawk-Odin-the-MVP-at-VALORANT-Champions-2025-1125x633.jpg',
+        'Chovy': 'https://noticias.maisesports.com.br/wp-content/uploads/2023/10/chovy-worlds-2023.jpg',
+        'Forsaken': 'https://media.suara.com/pictures/1600x840/2025/09/16/28598-jason-f0rsaken-susanto-pro-player-valorant.jpg',
+        'Kakeru': 'https://liquipedia.net/commons/images/0/07/Kakeru_Red_Bull_Kumite_2025.jpg',
+        'Menard': 'https://liquipedia.net/commons/images/thumb/a/ab/MenaRD_EVO_2025.jpg/600px-MenaRD_EVO_2025.jpg',
+        'Zywoo': 'https://liquipedia.net/commons/images/thumb/f/ff/ZywOo_at_BLAST_Open_Spring_2025.jpg/600px-ZywOo_at_BLAST_Open_Spring_2025.jpg',
+        'Counter Strike 2': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/header.jpg?t=1749053861',
+        'Dota 2': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/header.jpg?t=1762820658',
+        'League of Legends': 'https://s2.glbimg.com/cg0Yf7KUqt4wFsxoPyeAIUhZMv8=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2019/Y/L/lIgTd8SVCHPu8lGXmbJg/novo-logo-league-of-legends.jpg',
+        'Mobile Legends: Bang Bang': 'https://t2.tudocdn.net/622409?w=1920',
+        'Valorant': 'https://cdn.sortiraparis.com/images/1001/66131/1103306-valorant-le-jeu-video-signe-riot-games-est-disponible.jpg',
+        'FC 26': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405690/2d96aa1b06e453cd62dae9029d412f19e61932c3/header.jpg?t=1761904811',
+        'F1 25': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3059520/37f833ca5bd3d5c3eec2b411131f3e00f580bbe7/header.jpg?t=1762963192',
+        'Rematch': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2138720/header.jpg?t=1761052542',
+        'Caedrel': 'https://liquipedia.net/commons/images/6/69/Caedrel_Worlds_2024.jpg',
+        'Kai Cenat': 'https://gamohol.com/wp-content/uploads/2023/02/kai-cenat.webp',
+        'Moistcr1tikal': 'https://win.gg/wp-content/uploads/2021/12/Moistcritical.jpg.webp',
+        'Sakura Miko': 'https://cdn.prod.website-files.com/5d7e8885cad5174a2fcb98d7/64ad80a19abfb265fd9dfe81_Sakura%2520Miko.jpeg',
+        'The Burnt Peanut': 'https://www.indy100.com/media-library/the-burnt-peanut-won-best-vtuber-at-the-streamer-awards-2025.jpg?id=62291768&width=1200&height=600&coordinates=0%2C11%2C0%2C15',
+        'Christopher Larkin - Hollow Knight: Silksong': 'https://f4.bcbits.com/img/0023421569_10.jpg',
+        'Darren Korb - Hades 2': 'https://cdn.shopify.com/s/files/1/1226/8792/files/Origins.png?v=1611406904',
+        'Lorien Testard - Clair Obscur: Expedition 33': 'https://live-production.wcms.abc-cdn.net.au/1ff88334db86c8fc11b717e42fcd6cd3?impolicy=wcms_crop_resize&cropH=3290&cropW=4935&xPos=0&yPos=90&width=862&height=575',
+        'Toma Otowa - Ghost of Yotei': 'https://m.media-amazon.com/images/M/MV5BMGI3OWRiNGUtNWZkNi00YTNiLWEwZjktZGQ2OGUyMDBkOGFlXkEyXkFqcGc@._V1_.jpg',
+        'Woodkid & Ludvig Forssell - Death Stranding 2: On the Beach': 'https://cdn.shopify.com/s/files/1/0703/5217/5391/files/hideo-kojima-teams-up-with-woodkid-for-death-stranding-2-on-v0-bxqhxnuhpbbe1-1.jpg?v=1751285799',
+        'Ben Starr - Clair Obscur: Expedition 33': 'https://external-preview.redd.it/ben-starr-as-clive-you-will-never-understand-the-burden-of-v0-zziXFu35sUl8xnnSNum5XxThK_fIfSW8RKNaLfJvKZw.png?format=pjpg&auto=webp&s=6ddc6d3b68bcc6a23e61c3707022ca3cc4242a90',
+        'Charlie Cox': 'https://www.hollywoodreporter.com/wp-content/uploads/2025/02/GettyImages-2201803981.jpg?crop=0px%2C269px%2C5000px%2C2797px&resize=2000%2C1126',
+        'Erika Ishii': 'https://static0.gamerantimages.com/wordpress/wp-content/uploads/2024/09/erika-ishii.jpg',
+        'Jennifer English': 'https://m.media-amazon.com/images/M/MV5BZjg0MTRkMzMtZGNlNi00NjA5LTlkZTgtZDdkZDJiOTRkOTIyXkEyXkFqcGc@._V1_.jpg',
+        'Konatsu Kato': 'https://m.media-amazon.com/images/M/MV5BYmZlZjJhYTAtNzNjMi00YmMxLWFhNjEtMDFhMTg0YWMxZGE1XkEyXkFqcGc@._V1_.jpg',
+        'Troy Baker': 'https://m.media-amazon.com/images/M/MV5BZjA1YTcxNjktZDhhZi00NDhmLTkyZTYtZWY4OWVmZjA1ZTI4XkEyXkFqcGc@._V1_.jpg'
     };
     
-    // INFORMAÇÕES DOS JOGOS (gêneros e sinopse - COMPLETAS)
+    // INFORMAÇÕES DOS JOGOS (gêneros e sinopse ATUALIZADA)
     const gameInfo = {
         'Clair Obscur: Expedition 33': {
             genres: ['RPG', 'Aventura', 'Fantasia'],
-            synopsis: 'Em uma jornada épica através de paisagens surrealistas, luz e sombra determinam o destino. Enfrente criaturas únicas e desvende mistérios ancestrais neste RPG que redefine o gênero.'
+            synopsis: 'RPG de fantasia com combate por turnos e narrativa cinematográfica. Jogadores exploram um mundo dividido entre luz e sombra, tomando decisões que afetam o destino dos personagens.'
         },
         'Death Stranding 2: On the Beach': {
             genres: ['Ação', 'Aventura', 'Ficção Científica'],
-            synopsis: 'Continuação da épica saga de conexão em um mundo pós-apocalíptico fragmentado. Novos horizontes, perigos desconhecidos e uma jornada que desafia a própria natureza da existência.'
+            synopsis: 'Sequência do aclamado jogo de Hideo Kojima. Continua a jornada de Sam Bridges em um mundo pós-apocalíptico, focando em conexões humanas e entregas em paisagens surrealistas.'
         },
         'Hades 2': {
             genres: ['Roguelike', 'Ação', 'Mitologia'],
-            synopsis: 'A sequência do aclamado rogue-like que explora o submundo da mitologia grega. Nova protagonista, novos deuses e desafios ainda maiores no reino de Hades.'
+            synopsis: 'Sequência do premiado rogue-like, agora com Melinoë, princesa do submundo, como protagonista. Combate dinâmico, narrativa profunda e deuses gregos revisitados.'
         },
         'Hollow Knight: Silksong': {
             genres: ['Metroidvania', 'Ação', 'Aventura'],
-            synopsis: 'A tão aguardada sequência do aclamado Hollow Knight, agora com Hornet como protagonista em um novo reino. Descubra segredos antigos e enfrente novos desafios.'
+            synopsis: 'A tão aguardada sequência de Hollow Knight. Controle Hornet em um novo reino cheio de perigos, habilidades únicas e segredos a serem desvendados.'
         },
         'Kingdom Come: Deliverance 2': {
             genres: ['RPG', 'Histórico', 'Mundo Aberto'],
-            synopsis: 'Continuação do RPG histórico realista ambientado na Europa Medieval. Com gráficos aprimorados e mundo expandido, viva uma autêntica experiência medieval.'
+            synopsis: 'RPG histórico realista ambientado na Europa Medieval. Sistema de combate complexo, narrativa ramificada e atenção aos detalhes históricos.'
         },
         'Donkey Kong Bananza': {
             genres: ['Plataforma', 'Aventura', 'Família'],
-            synopsis: 'Nova aventura do icônico gorila em uma ilha tropical cheia de segredos. Colete bananas, desbloqueie novos poderes e enfrente desafios em ambientes vibrantes.'
+            synopsis: 'Nova aventura do icônico gorila em uma ilha tropical cheia de segredos. Combina plataforma clássica com elementos de exploração e colecionáveis.'
         },
         'Ghost of Yotei': {
             genres: ['Ação', 'Aventura', 'Stealth'],
-            synopsis: 'Aventura de ação e stealth ambientada no Japão feudal. Como um guerreiro fantasma, vingue-se daqueles que destruíram seu clã em uma jornada épica.'
+            synopsis: 'Aventura de ação e stealth ambientada no Japão feudal. Controle um shinobi em missões furtivas com combate preciso e narrativa envolvente.'
         },
         'Split Fiction': {
             genres: ['Ação', 'RPG', 'Ficção Científica'],
-            synopsis: 'Jogo de ação e RPG com narrativa não-linear e múltiplas realidades. Suas escolhas determinam o destino de universos paralelos em um conflito cósmico.'
+            synopsis: 'Jogo de ação com múltiplas realidades e narrativa não-linear. Decisões do jogador afetam diretamente o desenrolar da história em diferentes dimensões.'
         },
         'Avowed': {
             genres: ['RPG', 'Ação', 'Fantasia'],
-            synopsis: 'RPG de mundo aberto da Obsidian ambientado no universo de Pillars of Eternity. Descubra segredos ancestrais e enfrente ameaças mágicas em terras desconhecidas.'
+            synopsis: 'RPG em primeira pessoa da Obsidian no universo de Pillars of Eternity. Exploração, combate mágico e escolhas morais em um mundo rico.'
         },
         'Monster Hunter Wilds': {
             genres: ['Ação', 'RPG', 'Caça'],
-            synopsis: 'A mais nova entrada na série de caça a monstros com ambientes dinâmicos. Novas criaturas, armas e um mundo vivo que responde às suas ações.'
+            synopsis: 'Nova entrada na famosa série de caça a monstros. Ambientes dinâmicos, monstros colossais e cooperação multiplayer aprimorada.'
         },
         'The Outer Worlds 2': {
             genres: ['RPG', 'Ficção Científica', 'Ação'],
-            synopsis: 'Sequência do RPG espacial da Obsidian com novas histórias e planetas. Explore corporações intergalácticas e tome decisões que moldam o universo.'
+            synopsis: 'Sequência do RPG espacial da Obsidian. Sátira corporativa, escolhas narrativas significativas e novos planetas para explorar.'
         },
         'Indiana Jones and the Great Circle': {
             genres: ['Ação', 'Aventura', 'Quebra-Cabeças'],
-            synopsis: 'Aventura do famoso arqueólogo em uma jornada ao redor do mundo. Resolva quebra-cabeças antigos, descubra artefatos e enfrente perigos em locais exóticos.'
+            synopsis: 'Aventura do famoso arqueólogo em uma jornada ao redor do mundo. Combina ação, exploração e quebra-cabeças em locais históricos.'
         },
         'Silent Hill f': {
             genres: ['Terror', 'Sobrevivência', 'Psicológico'],
-            synopsis: 'Novo capítulo da aclamada série de terror psicológico. Explore um Japão assombrado por pesadelos pessoais e criaturas que refletem seus medos mais profundos.'
+            synopsis: 'Novo capítulo da aclamada série de terror psicológico. Atmosfera opressiva, monstros simbólicos e narrativa perturbadora.'
         },
         "Assassin's Creed Shadows": {
             genres: ['Ação', 'Aventura', 'Stealth'],
-            synopsis: 'A nova entrada na série que explora o Japão feudal. Seja um mestre assassino na era dos samurais e ninjas, com jogabilidade renovada e história profunda.'
+            synopsis: 'Nova entrada na série que explora o Japão feudal. Sistema de furtividade renovado e combate com katanas autêntico.'
         },
         'Doom: The Dark Ages': {
             genres: ['Ação', 'FPS', 'Ficção Científica'],
-            synopsis: 'Prequela da série Doom ambientada na Idade Média. Lute contra demônios com armas medievais aprimoradas em uma guerra cósmica que redefine o inferno.'
+            synopsis: 'Prequela da série Doom ambientada na Idade Média. Combate frenético contra demônios com armas medievais futuristas.'
         },
         'Battlefield 6': {
             genres: ['FPS', 'Multiplayer', 'Guerra'],
-            synopsis: 'A mais nova entrada na série de combate militar em larga escala. Novos veículos, armas e destruição ambiental em batalhas épicas com 128 jogadores.'
+            synopsis: 'Mais nova entrada na série de combate militar. Mapas enormes, destruição ambiental e operações em larga escala.'
         },
         'Ninja Gaiden 4': {
             genres: ['Ação', 'Hack and Slash', 'Aventura'],
-            synopsis: 'Retorno da clássica série de ação com combate preciso e desafiador. Novas técnicas ninja, inimigos formidáveis e uma história de vingança épica.'
+            synopsis: 'Retorno da clássica série de ação. Combate preciso e desafiador com Ryu Hayabusa contra novas ameaças sobrenaturais.'
         },
         'Shinobi: Art of Vengeance': {
             genres: ['Ação', 'Stealth', 'Aventura'],
-            synopsis: 'Reinvenção moderna da clássica série Shinobi. Movimentação fluida, combate preciso e habilidades ninja em um mundo feudal reimaginado.'
+            synopsis: 'Reinvenção moderna da clássica série Shinobi. Furtividade, parkour e combate com shurikens em cenários verticais.'
         },
         '2XKO': {
             genres: ['Luta', 'Competitivo', 'Multiplayer'],
-            synopsis: 'Jogo de luta 2D baseado no universo de League of Legends. Personagens icônicos, combos impressionantes e mecânicas acessíveis para novos jogadores.'
+            synopsis: 'Jogo de luta 2D baseado no universo de League of Legends. Personagens icônicos, combos visuais e foco em competição.'
         },
         'Fatal Fury: City of the Wolves': {
             genres: ['Luta', 'Arcade', 'Competitivo'],
-            synopsis: 'Nova entrada na clássica série de luta da SNK. Sistema de combate renovado, novos personagens e o retorno de lutadores favoritos em South Town.'
+            synopsis: 'Nova entrada na clássica série de luta da SNK. Sistema de combate renovado e retorno de personagens amados.'
         },
         'Mortal Kombat: Legacy Kollection': {
             genres: ['Luta', 'Coleção', 'Arcade'],
-            synopsis: 'Coleção remasterizada dos clássicos Mortal Kombat. Todos os jogos principais com gráficos atualizados, conteúdo extra e modo online aprimorado.'
+            synopsis: 'Coleção remasterizada dos clássicos Mortal Kombat. Gráficos atualizados, online funcional e conteúdo extra.'
         },
         'Virtua Fighter 5 R.E.V.O. World Stage': {
             genres: ['Luta', '3D', 'Competitivo'],
-            synopsis: 'Versão atualizada do clássico jogo de luta 3D. Sistema de combate refinado, novos personagens e torneios online em escala mundial.'
+            synopsis: 'Versão atualizada do clássico jogo de luta 3D. Balanceamento refinado e torneios online integrados.'
         },
         'Capcom Fighting Collection 2': {
             genres: ['Luta', 'Coleção', 'Arcade'],
-            synopsis: 'Segunda coleção de jogos de luta clássicos da Capcom. Inclui títulos raros, modo online para todos os jogos e conteúdo de desenvolvimento inédito.'
+            synopsis: 'Segunda coleção de jogos de luta clássicos da Capcom. Inclui títulos raros e recursos de preservação histórica.'
         },
         'The Alters': {
             genres: ['Estratégia', 'Simulação', 'Narrativa'],
-            synopsis: 'Jogo de estratégia com elementos narrativos profundos. Gerencie uma equipe de versões alternativas de si mesmo em uma estação espacial isolada.'
+            synopsis: 'Jogo de estratégia narrativa onde você gerencia versões alternativas de si mesmo. Decisões complexas e dilemas existenciais.'
         },
         'Final Fantasy Tactics - The Ivalice Chronicles': {
             genres: ['RPG', 'Táticas', 'Fantasia'],
-            synopsis: 'Remake do clássico RPG tático com novo conteúdo. Sistema de batalha aprimorado, gráficos totalmente refeitos e histórias adicionais no mundo de Ivalice.'
+            synopsis: 'Remake do clássico RPG tático com novo conteúdo. Batalhas por turnos em grids e história política complexa.'
         },
         'Jurassic World Evolution 3': {
             genres: ['Simulação', 'Estratégia', 'Gestão'],
-            synopsis: 'Simulador de parque temático com dinossauros. Crie o parque definitivo com novas espécies, recursos de personalização e desafios de gestão.'
+            synopsis: 'Simulador de parque temático com dinossauros. Gerencie segurança, pesquisa e entretenimento em ilhas pré-históricas.'
         },
         'Civilization 7': {
             genres: ['Estratégia', 'Turnos', 'História'],
-            synopsis: 'A mais nova entrada na lendária série de estratégia por turnos. Novas civilizações, mecânicas diplomáticas e sistemas de tecnologia totalmente renovados.'
+            synopsis: 'Mais nova entrada na lendária série de estratégia por turnos. Guie uma civilização da antiguidade à era moderna.'
         },
         'Tempest Rising': {
             genres: ['Estratégia', 'RTS', 'Guerra'],
-            synopsis: 'Jogo de estratégia em tempo real inspirado nos clássicos do gênero. Três facções únicas, campanha não-linear e combate tático em grande escala.'
+            synopsis: 'Jogo de estratégia em tempo real inspirado nos clássicos dos anos 90. Três facções únicas e campanha não-linear.'
         },
         'Two Point Museum': {
             genres: ['Simulação', 'Gestão', 'Humor'],
-            synopsis: 'Simulador de museu com o humor característico da série Two Point. Crie exposições bizarras, gerencie visitantes e construa o museu mais estranho do mundo.'
+            synopsis: 'Simulador de museu com o humor característico da série Two Point. Crie exposições bizarras e gerencie visitantes.'
         },
         'Lego Party!': {
             genres: ['Party Game', 'Família', 'Multijogador'],
-            synopsis: 'Jogo de festa com minijogos no universo Lego. Até 8 jogadores locais em mais de 50 minijogos diferentes com personagens clássicos da Lego.'
+            synopsis: 'Jogo de festa com minijogos no universo Lego. Competições divertidas para até 8 jogadores localmente.'
         },
         'Lego Voyagers': {
             genres: ['Aventura', 'Exploração', 'Família'],
-            synopsis: 'Aventura de exploração espacial no universo Lego. Viaje por galáxias, descubra planetas alienígenas e construa sua própria nave espacial.'
+            synopsis: 'Aventura de exploração espacial no universo Lego. Construa naves e explore planetas em sistema solar de brinquedo.'
         },
         'Mario Kart World': {
             genres: ['Corrida', 'Party Game', 'Família'],
-            synopsis: 'A mais nova entrada na série de corridas da Nintendo. Novas pistas inspiradas em locais reais, mais personagens e itens malucos para toda a família.'
+            synopsis: 'Mais nova entrada na série de corridas da Nintendo. Novas pistas globais e personagens de todo o universo Mario.'
         },
         'Sonic Racing: CrossWorlds': {
             genres: ['Corrida', 'Arcade', 'Multijogador'],
-            synopsis: 'Jogo de corrida com personagens do universo Sonic. Pistas interdimensionais, personalização de veículos e corridas online com até 12 jogadores.'
+            synopsis: 'Jogo de corrida com personagens do universo Sonic. Pistas dinâmicas e poderes especiais baseados nos anéis.'
         },
         'Atomfall': {
             genres: ['Ação', 'Sobrevivência', 'Mundo Aberto'],
-            synopsis: 'Jogo de sobrevivência em um mundo pós-apocalíptico. Explore uma Inglaterra rural após um desastre nuclear, gerencie recursos e enfrente ameaças mutantes.'
+            synopsis: 'Jogo de sobrevivência em mundo pós-apocalíptico radioativo. Recursos escassos e criaturas mutantes em paisagem desolada.'
         },
         'South of Midnight': {
             genres: ['Ação', 'Aventura', 'Fantasia'],
-            synopsis: 'Aventura de ação com elementos de folclore americano. Explore o sul dos EUA reimaginado, enfrente criaturas do folclore e descubra segredos familiares.'
+            synopsis: 'Aventura de ação com elementos de folclore americano. Protagonista feminina em jornada através do sul místico dos EUA.'
         },
         '007: First Light': {
             genres: ['Ação', 'Stealth', 'Espionagem'],
-            synopsis: 'Nova aventura do agente 007 com foco em espionagem. Missões globais, tecnologia de ponta e uma trama que redefine o universo de James Bond.'
+            synopsis: 'Nova aventura do agente 007 com foco em espionagem. Missões globais, gadgets high-tech e vilões icônicos.'
         },
         'Grand Theft Auto 6': {
             genres: ['Ação', 'Mundo Aberto', 'Aventura'],
-            synopsis: 'A tão aguardada nova entrada na série de mundo aberto. Vice City revisitada, dois protagonistas e uma história que redefine o crime organizado.'
+            synopsis: 'A tão aguardada nova entrada na série. Vice City revisitada, múltiplos protagonistas e mundo aberto mais vivo que nunca.'
         },
         "Marvel's Wolverine": {
             genres: ['Ação', 'Aventura', 'Super-heróis'],
-            synopsis: 'Aventura de ação com o mutante mais famoso dos X-Men. Combate visceral, história madura e uma jornada pessoal através do passado de Logan.'
+            synopsis: 'Aventura de ação com o mutante mais famoso dos X-Men. Combate visceral com garras de adamantium e regeneração.'
         },
         'Resident Evil: Requiem': {
             genres: ['Terror', 'Sobrevivência', 'Ação'],
-            synopsis: 'Novo capítulo na série de terror de sobrevivência. Atmosfera claustrofóbica, recursos limitados e criaturas aterrorizantes em uma história original.'
+            synopsis: 'Novo capítulo na série de terror de sobrevivência. Volta às origens com recursos limitados e atmosfera opressiva.'
         },
         'The Witcher 4': {
             genres: ['RPG', 'Ação', 'Fantasia'],
-            synopsis: 'A nova entrada na aclamada série de RPG de fantasia. Nova escola de bruxos, mundo expandido e mecânicas de combate completamente renovadas.'
+            synopsis: 'Nova entrada na aclamada série de RPG de fantasia. Nova escola de bruxos, monstros e escolhas morais complexas.'
         },
         'Alien: Rogue Incursion': {
             genres: ['Terror', 'VR', 'Sobrevivência'],
-            synopsis: 'Experiência de terror em realidade virtual no universo Alien. Atmosfera opressiva, xenomorfos inteligentes e uma história original em primeira pessoa.'
+            synopsis: 'Experiência de terror em realidade virtual no universo Alien. Atmosfera claustrofóbica e xenomorfos inteligentes.'
         },
         'Arken Age': {
             genres: ['RPG', 'Fantasia', 'Mundo Aberto'],
-            synopsis: 'RPG de fantasia com mundo aberto expansivo. Magia elemental, criaturas lendárias e uma história épica sobre o equilíbrio entre ordem e caos.'
+            synopsis: 'RPG de fantasia com mundo aberto expansivo. Combate de magia, criaturas míticas e reinos em guerra.'
         },
         'Ghost Town': {
             genres: ['Terror', 'Exploração', 'Suspense'],
-            synopsis: 'Jogo de terror psicológico em uma cidade fantasma. Investigue desaparecimentos misteriosos, enfrente entidades sobrenaturais e descubra verdades perturbadoras.'
+            synopsis: 'Jogo de terror psicológico em uma cidade fantasma. Investigação paranormal e encontros sobrenaturais.'
         },
         "Marvel's Deadpool VR": {
             genres: ['Ação', 'VR', 'Humor'],
-            synopsis: 'Experiência de ação em VR com o mercenário tagarela. Combate caótico, humor irreverente e quebra da quarta parede em uma aventura totalmente imersiva.'
+            synopsis: 'Experiência de ação em VR com o mercenário tagarela. Quebra-quarta-parade, tiroteios e humor característico.'
         },
         'The Midnight Walk': {
             genres: ['Terror', 'Exploração', 'Narrativa'],
-            synopsis: 'Jogo de terror narrativo com elementos de exploração. Atmosfera surreal, enigmas psicológicos e uma jornada noturna através de memórias reprimidas.'
+            synopsis: 'Jogo de terror narrativo com elementos de exploração. Caminhadas noturnas que revelam segredos sombrios.'
         },
         'Blue Prince': {
             genres: ['RPG', 'Aventura', 'Puzzle'],
-            synopsis: 'RPG indie com elementos de puzzle e narrativa profunda. Explore um castelo procedural, resolva enigmas arquitetônicos e descubra segredos familiares.'
+            synopsis: 'RPG indie com elementos de puzzle e narrativa profunda. Mecânicas únicas de resolução de mistérios.'
         },
         'Despelote': {
             genres: ['Esporte', 'Futebol', 'Narrativa'],
-            synopsis: 'Jogo narrativo sobre futebol e cultura latino-americana. Reviva memórias de infância, explore relações familiares e o poder unificador do esporte.'
+            synopsis: 'Jogo narrativo sobre futebol e cultura latino-americana. Crescimento pessoal através do esporte em comunidade.'
         },
         'Dispatch': {
             genres: ['Ação', 'Estratégia', 'Táticas'],
-            synopsis: 'Jogo de ação tática com elementos de estratégia. Comande uma equipe de especialistas em cenários globais de crise com decisões em tempo real.'
+            synopsis: 'Jogo de ação tática com elementos de estratégia. Comande equipes especiais em operações de alto risco.'
         },
         'Megabonk': {
             genres: ['Arcade', 'Ação', 'Multijogador'],
-            synopsis: 'Jogo de ação arcade com combate frenético. Personagens exagerados, arenas destrutíveis e combates caóticos para até 8 jogadores locais.'
+            synopsis: 'Jogo de ação arcade com combate frenético. Estética retro e multiplayer caótico.'
         },
         'Absolum': {
             genres: ['Ação', 'RPG', 'Fantasia'],
-            synopsis: 'RPG de ação com combate dinâmico e mundo aberto. Sistema de magia único, escolhas morais significativas e uma guerra cósmica entre luz e escuridão.'
+            synopsis: 'RPG de ação com combate dinâmico e mundo aberto. Classes personalizáveis e magias elementais.'
         },
         'Ball x Pit': {
             genres: ['Esporte', 'Competitivo', 'Multijogador'],
-            synopsis: 'Jogo de esporte competitivo com física única. Mistura elementos de futebol e basquete em arenas verticais com mecânicas aéreas inovadoras.'
+            synopsis: 'Jogo de esporte competitivo com física única. Combina elementos de futebol e basquete em arenas futuristas.'
         },
         'Arc Raiders': {
             genres: ['Ação', 'Co-op', 'Ficção Científica'],
-            synopsis: 'Jogo de ação cooperativo contra ameaças alienígenas. Trabalhe em equipe para defender a Terra de invasores robóticos em cenários destrutíveis.'
+            synopsis: 'Jogo de ação cooperativo contra ameaças alienígenas. Combate tático e personalização de equipamentos.'
         },
         'Elden Ring: Nightreign': {
             genres: ['RPG', 'Ação', 'Fantasia'],
-            synopsis: 'Expansão do aclamado RPG de ação da FromSoftware. Novas áreas, chefes, armas e uma história que explora as profundezas das Terras Intermédias.'
+            synopsis: 'Expansão do aclamado RPG de ação da FromSoftware. Novas áreas, chefes e lore para o mundo das Terras Intermédias.'
         },
         'Peak': {
             genres: ['Aventura', 'Exploração', 'Quebra-Cabeças'],
-            synopsis: 'Jogo de aventura e exploração em ambientes montanhosos. Escalada realista, quebra-cabeças ambientais e uma jornada de autodescoberta nas alturas.'
+            synopsis: 'Jogo de aventura e exploração em ambientes montanhosos. Escalada realista e descoberta de ruínas antigas.'
         },
         'Consume Me': {
             genres: ['Terror', 'Psicológico', 'Narrativa'],
-            synopsis: 'Experiência de terror psicológico com narrativa profunda. Explore as profundezas da mente humana, enfrente demônios pessoais e supere traumas.'
+            synopsis: 'Experiência de terror psicológico com narrativa profunda. Metáforas sobre consumo e identidade na sociedade moderna.'
         },
         'Lost Records: Bloom & Rage': {
             genres: ['Narrativa', 'Aventura', 'Mistério'],
-            synopsis: 'Jogo narrativo sobre memórias perdidas e descobertas. Quatro amigas reencontram-se décadas depois para desvendar um segredo que as separou.'
+            synopsis: 'Jogo narrativo sobre memórias perdidas e descobertas. Amizade feminina e segredos de verões passados.'
         },
         'Wanderstop': {
             genres: ['Simulação', 'Relaxante', 'Narrativa'],
-            synopsis: 'Simulador relaxante sobre cuidar de um jardim mágico. Cultive plantas especiais, atenda clientes únicos e descubra uma história pessoal tocante.'
+            synopsis: 'Simulador relaxante sobre cuidar de um jardim mágico. Narrativa contemplativa e mecânicas de cultivo pacíficas.'
         },
         "Baldur's Gate 3": {
             genres: ['RPG', 'Táticas', 'Fantasia'],
-            synopsis: 'RPG tático baseado em D&D com narrativa profunda. Decisões significativas, combate estratégico e companheiros memoráveis em um épico de fantasia.'
+            synopsis: 'RPG tático baseado em D&D 5e. Narrativa ramificada, companheiros complexos e combate estratégico por turnos.'
         },
         'Final Fantasy 14': {
             genres: ['MMORPG', 'Fantasia', 'RPG'],
-            synopsis: 'MMORPG em constante evolução com expansões regulares. Comunidade ativa, conteúdo cooperativo massivo e uma das melhores histórias do gênero.'
+            synopsis: 'MMORPG em constante evolução com expansões regulares. História épica, raides desafiadoras e comunidade ativa.'
         },
         'Fortnite': {
             genres: ['Battle Royale', 'Ação', 'Multijogador'],
-            synopsis: 'Battle royale em constante evolução com crossovers. Construção única, eventos ao vivo e colaborações com franquias icônicas da cultura pop.'
+            synopsis: 'Battle royale em constante evolução com crossovers. Construção em tempo real e eventos ao vivo regulares.'
         },
         'Helldivers 2': {
             genres: ['Ação', 'Co-op', 'Ficção Científica'],
-            synopsis: 'Jogo de ação cooperativo por democracia galáctica. Equipe-se com armas estratosféricas, liberte planetas e espalhe a democracia pelo universo.'
+            synopsis: 'Jogo de ação cooperativo por democracia galáctica. Humor satírico e combate caótico contra insetos e robôs.'
         },
         "No Man's Sky": {
             genres: ['Exploração', 'Sobrevivência', 'Ficção Científica'],
-            synopsis: 'Simulador de exploração espacial com universo procedural. Bilhões de planetas, construção de bases, naves personalizáveis e uma galáxia infinita.'
+            synopsis: 'Simulador de exploração espacial com universo procedural. 18 quintilhões de planetas, base building e história cósmica.'
         },
         'Um Filme Minecraft': {
             genres: ['Aventura', 'Fantasia', 'Família'],
-            synopsis: 'Adaptação cinematográfica do universo Minecraft. Aventura familiar sobre criatividade, amizade e superação em um mundo de blocos.'
+            synopsis: 'Adaptação cinematográfica do universo Minecraft. Aventura em mundo de blocos com criaturas icônicas do jogo.'
         },
         'Devil May Cry': {
             genres: ['Ação', 'Hack and Slash', 'Fantasia'],
-            synopsis: 'Adaptação live-action da série de ação Devil May Cry. Dante enfrenta demônios em Red Grave City com estilo, combos e muito attitude.'
+            synopsis: 'Adaptação live-action da série de ação Devil May Cry. Dante e Vergil contra demônios com combate estilizado.'
         },
         'Splinter Cell: Deathwatch': {
             genres: ['Ação', 'Stealth', 'Espionagem'],
-            synopsis: 'Adaptação live-action da série de espionagem. Sam Fisher investiga uma conspiração global usando tecnologia de ponta e táticas furtivas.'
+            synopsis: 'Adaptação live-action da série de espionagem. Sam Fisher em missões furtivas de alto risco global.'
         },
         'The Last of Us': {
             genres: ['Drama', 'Sobrevivência', 'Ação'],
-            synopsis: 'Série live-action baseada no aclamado jogo. Joel e Ellie viajam por um Estados Unidos pós-apocalíptico em busca de esperança e redenção.'
+            synopsis: 'Série live-action baseada no aclamado jogo. Joel e Ellie em jornada pós-apocalíptica por um mundo infectado.'
         },
         'Until Dawn': {
             genres: ['Terror', 'Narrativa', 'Suspense'],
-            synopsis: 'Adaptação do jogo de terror interativo. Oito amigos enfrentam um pesadelo nas montanhas onde cada decisão pode significar vida ou morte.'
+            synopsis: 'Adaptação do jogo de terror interativo. Grupo de amigos em cabana isolada com decisões que determinam quem sobrevive.'
         },
         'Destiny Rising': {
             genres: ['RPG', 'Ação', 'MMO'],
-            synopsis: 'Novo capítulo no universo Destiny com jogabilidade aprimorada. Novas subclasses, atividades endgame e uma guerra cósmica contra o Vazio.'
+            synopsis: 'Novo capítulo no universo Destiny. Sistema de classes renovado e campanha cooperativa expansiva.'
         },
         'Persona 5: The Phantom X': {
             genres: ['RPG', 'Simulação', 'Fantasia'],
-            synopsis: 'Nova entrada na série Persona com novos personagens. Mistério sobrenatural, batalhas por turnos e simulação de vida escolar em Tóquio.'
+            synopsis: 'Nova entrada na série Persona com novos personagens. Combate por turnos, dungeon crawling e simulação social.'
         },
         'Sonic Rumble': {
             genres: ['Battle Royale', 'Ação', 'Multijogador'],
-            synopsis: 'Battle royale com personagens do universo Sonic. Até 32 jogadores em arenas dinâmicas com power-ups, armadilhas e velocidade supersônica.'
+            synopsis: 'Battle royale com personagens do universo Sonic. Corridas em arenas com power-ups e obstáculos dinâmicos.'
         },
         'Umamusume: Pretty Derby': {
             genres: ['Simulação', 'Esporte', 'Anime'],
-            synopsis: 'Jogo de simulação de corridas com garotas-cavalo. Treine sua equipe, participe de torneios e desenvolva relacionamentos no mundo das corridas.'
+            synopsis: 'Jogo de simulação de corridas com garotas-cavalo. Treinamento, competições e desenvolvimento de relacionamentos.'
         },
         'Wuthering Waves': {
             genres: ['RPG', 'Ação', 'Mundo Aberto'],
-            synopsis: 'RPG de ação com mundo aberto e combate fluido. Sistema de eco, exploração vertical e uma história sobre reconstrução após o apocalipse.'
+            synopsis: 'RPG de ação com mundo aberto e combate fluido. Sistema de parry preciso e exploração de ruínas pós-apocalípticas.'
         },
         'Marvel Rivals': {
             genres: ['FPS', 'Hero Shooter', 'Multijogador'],
-            synopsis: 'Hero shooter 6v6 com personagens da Marvel. Combinações de habilidades, mapas destrutíveis e batalhas épicas entre heróis e vilões.'
+            synopsis: 'Hero shooter 6v6 com personagens da Marvel. Habilidades únicas por herói e mapas interativos.'
         },
-        // Informações para times e atletas de esports
+        
+        // NOVAS INFORMAÇÕES ADICIONADAS
         'Gen.G - League of Legends': {
-            genres: ['Esports', 'Equipe', 'Competitivo'],
-            synopsis: 'Time coreano campeão mundial de League of Legends. Conhecido por seu jogo estratégico e jogadores excepcionais como Chovy e Peyz.'
+            genres: ['Esports', 'Competitivo', 'Coreia'],
+            synopsis: 'Equipe coreana dominante no cenário de League of Legends. Múltiplos títulos do LCK e performances consistentes em mundiais.'
         },
         'NRG - Valorant': {
-            genres: ['Esports', 'Equipe', 'Competitivo'],
-            synopsis: 'Organização norte-americana campeã mundial de Valorant. Destaque para o MVP Brawk e seu jogo agressivo e coordenado.'
+            genres: ['Esports', 'Competitivo', 'América do Norte'],
+            synopsis: 'Organização norte-americana campeã do Valorant Champions 2025. Estratégia inovadora e jogadores superstar.'
         },
         'Team Falcons - Dota 2': {
-            genres: ['Esports', 'Equipe', 'Competitivo'],
-            synopsis: 'Time árabe que domina o cenário competitivo de Dota 2. Conhecido por suas estratégias inovadoras e execução impecável em torneios.'
+            genres: ['Esports', 'Competitivo', 'Oriente Médio'],
+            synopsis: 'Equipe do Oriente Médio que revolucionou o cenário de Dota 2. Jogadas agressivas e drafts surpreendentes.'
         },
         'Team Liquid PH - Mobile Legends: Bang Bang': {
-            genres: ['Esports', 'Equipe', 'Competitivo'],
-            synopsis: 'Equipe filipina dominante no cenário de Mobile Legends. Especialistas em teamfights e jogadas coordenadas em alta velocidade.'
+            genres: ['Esports', 'Competitivo', 'Filipinas'],
+            synopsis: 'Equipe filipina dominante no Mobile Legends. Táticas de teamfight exemplares e múltiplos títulos internacionais.'
         },
         'Team Vitality - Counter Strike 2': {
-            genres: ['Esports', 'Equipe', 'Competitivo'],
-            synopsis: 'Organização francesa líder no cenário de Counter-Strike. Com Zywoo como estrela, é conhecida por seu jogo tático e precisão.'
+            genres: ['Esports', 'Competitivo', 'Europa'],
+            synopsis: 'Organização europeia campeã do Major de CS2. Roster francês com sinergia excepcional e individualidades brilhantes.'
         },
         'Brawk': {
-            genres: ['Esports', 'Jogador', 'Valorant'],
-            synopsis: 'MVP do VALORANT Champions 2025, considerado o melhor jogador do mundo. Conhecido por jogadas agressivas e clutches em momentos decisivos.'
+            genres: ['Jogador', 'Valorant', 'Iniciador'],
+            synopsis: 'Jogador da NRG e MVP do Valorant Champions 2025. Conhecido por jogadas agressivas com Odin e liderança em jogo.'
         },
         'Chovy': {
-            genres: ['Esports', 'Jogador', 'League of Legends'],
-            synopsis: 'Mid laner coreano considerado o melhor jogador mecânico do mundo. Conhecido por seu farm perfeito e tomada de decisão impecável.'
+            genres: ['Jogador', 'League of Legends', 'Mid Laner'],
+            synopsis: 'Mid laner coreano do Gen.G, considerado o melhor jogador mecânico do mundo. Farm perfeito e rotações precisas.'
         },
         'Forsaken': {
-            genres: ['Esports', 'Jogador', 'Valorant'],
-            synopsis: 'Duelista indonésio conhecido por jogadas agressivas e clutches impossíveis. Estrela em ascensão no cenário competitivo de Valorant.'
+            genres: ['Jogador', 'Valorant', 'Duelista'],
+            synopsis: 'Duelista indonésio da NRG, conhecido como "f0rsaken". Clutches impossíveis e aim extraordinário com Vandal.'
         },
         'Kakeru': {
-            genres: ['Esports', 'Jogador', 'Street Fighter'],
-            synopsis: 'Campeão mundial de Street Fighter VI, conhecido por sua leitura de jogo perfeita e execução técnica impecável em torneios.'
+            genres: ['Jogador', 'Street Fighter', 'Competitivo'],
+            synopsis: 'Jogador japonês de Street Fighter VI, campeão do Red Bull Kumite 2025. Conhecido por reads psicológicos precisos.'
         },
         'Menard': {
-            genres: ['Esports', 'Jogador', 'Street Fighter'],
-            synopsis: 'Jogador dominicano campeão da EVO 2025. Conhecido por seu estilo de jogo imprevisível e adaptabilidade em qualquer situação.'
+            genres: ['Jogador', 'Street Fighter', 'Dominicana'],
+            synopsis: 'Jogador dominicano de Street Fighter VI, campeão da EVO 2025. Estilo agressivo com personagens de grappler.'
         },
         'Zywoo': {
-            genres: ['Esports', 'Jogador', 'Counter-Strike'],
-            synopsis: 'Considerado o melhor jogador de Counter-Strike do mundo. Conhecido por sua precisão cirúrgica e jogadas que parecem impossíveis.'
+            genres: ['Jogador', 'Counter Strike', 'AWPer'],
+            synopsis: 'AWPer francês do Team Vitality, considerado o melhor jogador de CS2 do mundo. Reações sobrenaturais e positioning perfeito.'
         },
         'Counter Strike 2': {
-            genres: ['FPS', 'Competitivo', 'Multiplayer'],
-            synopsis: 'O jogo de tiro tático mais popular do mundo. Modos competitivos, economia estratégica e combates 5v5 que testam habilidade e trabalho em equipe.'
+            genres: ['FPS', 'Tático', 'Competitivo'],
+            synopsis: 'FPS tático 5v5 com economia de rodadas. Bombsite attacks/defenses, utility usage e teamwork essencial.'
         },
         'Dota 2': {
-            genres: ['MOBA', 'Estratégia', 'Competitivo'],
-            synopsis: 'MOBA complexo com o maior prêmio em esports. Mais de 120 heróis únicos, estratégias profundas e partidas que podem durar mais de uma hora.'
+            genres: ['MOBA', 'Estratégico', 'Competitivo'],
+            synopsis: 'MOBA complexo com mais de 120 heróis únicos. Farm, teamfights épicos e jogo macro estratégico profundo.'
         },
         'League of Legends': {
-            genres: ['MOBA', 'Competitivo', 'Multiplayer'],
-            synopsis: 'MOBA mais popular do mundo com mais de 150 campeões. Partidas 5v5, objetivos estratégicos e um cenário competitivo global massivo.'
+            genres: ['MOBA', 'Competitivo', 'Estratégico'],
+            synopsis: 'MOBA 5v5 com mais de 160 campeões. Lane phase, objetivos de mapa e teamfights decisivas em Summoner\'s Rift.'
         },
         'Mobile Legends: Bang Bang': {
             genres: ['MOBA', 'Mobile', 'Competitivo'],
-            synopsis: 'MOBA mobile otimizado para partidas rápidas. Controles touchscreen intuitivos, mais de 100 heróis e um cenário competitivo em crescimento.'
+            synopsis: 'MOBA mobile otimizado para dispositivos móveis. Partidas rápidas de 10-15 minutos e controles touch intuitivos.'
         },
         'Valorant': {
             genres: ['FPS', 'Tático', 'Competitivo'],
-            synopsis: 'FPS tático que combina precisão de CS:GO com habilidades de heróis. Agentes únicos, economia estratégica e meta em constante evolução.'
+            synopsis: 'FPS tático 5v5 com agentes com habilidades únicas. Econ system, plant/defuse e habilidades estratégicas.'
         },
         'FC 26': {
             genres: ['Esporte', 'Futebol', 'Simulação'],
-            synopsis: 'Simulador de futebol mais realista do mercado. Gráficos hiper-realistas, física aprimorada e todos os times e ligas licenciados.'
+            synopsis: 'Simulador de futebol mais recente da EA Sports. Gráficos realistas, Ultimate Team e licenças oficiais.'
         },
         'F1 25': {
-            genres: ['Corrida', 'Simulação', 'Esporte'],
-            synopsis: 'Simulador de Fórmula 1 oficial com todas as equipes e pilotos. Física realista, modo carreira completo e competições online.'
+            genres: ['Esporte', 'Corrida', 'Simulação'],
+            synopsis: 'Simulador de Fórmula 1 com física avançada. Todas as equipes e pilotos oficiais da temporada 2025.'
         },
         'Rematch': {
-            genres: ['Corrida', 'Arcade', 'Esporte'],
-            synopsis: 'Jogo de corrida arcade com veículos de combate. Customização profunda, arenas destrutíveis e combates veiculares intensos.'
+            genres: ['Esporte', 'Tênis', 'Simulação'],
+            synopsis: 'Simulador de tênis com foco em realismo. Sistema de golpes preciso e torneios profissionais licenciados.'
         },
         'Caedrel': {
-            genres: ['Streamer', 'Analista', 'Conteúdo'],
-            synopsis: 'Ex-jogador profissional e um dos maiores streamers de League of Legends. Conhecido por suas análises detalhadas e humor característico.'
+            genres: ['Streamer', 'Analista', 'League of Legends'],
+            synopsis: 'Ex-jogador profissional e atual analista/streamer de LoL. Conhecido por análises precisas e reações engraçadas.'
         },
         'Kai Cenat': {
-            genres: ['Streamer', 'Entretenimento', 'Variedade'],
-            synopsis: 'Um dos streamers mais populares do mundo. Conteúdo variado, desafios malucos e interação constante com sua enorme comunidade.'
+            genres: ['Streamer', 'Variedade', 'Entretenimento'],
+            synopsis: 'Streamer de variedade com uma das maiores comunidades da Twitch. Conteúdo caótico e interação intensa com fãs.'
         },
         'Moistcr1tikal': {
-            genres: ['Streamer', 'Comentário', 'Variedade'],
-            synopsis: 'Streamer conhecido por seu humor seco e comentários sinceros. Cobre jogos, notícias da indústria e eventos culturais da internet.'
+            genres: ['Streamer', 'Crítica', 'Variedade'],
+            synopsis: 'Streamer e YouTuber conhecido por críticas sinceras e humor seco. Cobre desde jogos até eventos da internet.'
         },
         'Sakura Miko': {
-            genres: ['VTuber', 'Entretenimento', 'Variedade'],
-            synopsis: 'VTuber da Hololive conhecida por sua personalidade energética. Conteúdo de jogos, karaokê e interações divertidas com os fãs.'
+            genres: ['VTuber', 'Hololive', 'Entretenimento'],
+            synopsis: 'VTuber da agência Hololive JP. Personagem de shrine maiden com personalidade energetic e as vezes desastrada.'
         },
         'The Burnt Peanut': {
-            genres: ['VTuber', 'Comédia', 'Variedade'],
-            synopsis: 'VTuber indie que ganhou popularidade com seu humor único. Conteúdo criativo, collabs diversas e uma comunidade engajada.'
+            genres: ['VTuber', 'Indie', 'Entretenimento'],
+            synopsis: 'VTuber indie que ganhou Best VTuber no Streamer Awards 2025. Conteúdo de arte e streams relaxantes.'
         },
         'Christopher Larkin - Hollow Knight: Silksong': {
-            genres: ['Compositor', 'Música', 'Jogos'],
-            synopsis: 'Compositor da trilha sonora de Hollow Knight e Silksong. Conhecido por suas composições atmosféricas e memoráveis que definem o tom dos jogos.'
+            genres: ['Compositor', 'Trilha Sonora', 'Video Game'],
+            synopsis: 'Compositor da trilha sonora de Hollow Knight e Silksong. Estilo orquestral melancólico que define a atmosfera dos jogos.'
         },
         'Darren Korb - Hades 2': {
-            genres: ['Compositor', 'Música', 'Jogos'],
-            synopsis: 'Compositor das trilhas de Hades e Hades 2. Mistura rock com instrumentos antigos para criar uma sonoridade única e energética.'
+            genres: ['Compositor', 'Trilha Sonora', 'Video Game'],
+            synopsis: 'Compositor da trilha sonora de Hades e Hades 2. Mistura de rock com instrumentos gregos antigos.'
         },
         'Lorien Testard - Clair Obscur: Expedition 33': {
-            genres: ['Compositor', 'Música', 'Jogos'],
-            synopsis: 'Compositor da trilha épica de Clair Obscur. Orquestrações grandiosas que complementam perfeitamente a jornada através de paisagens surrealistas.'
+            genres: ['Compositor', 'Trilha Sonora', 'Video Game'],
+            synopsis: 'Compositor da trilha orquestral de Clair Obscur. Temas épicos que alternam entre luz e sombra musicalmente.'
         },
         'Toma Otowa - Ghost of Yotei': {
-            genres: ['Compositor', 'Música', 'Jogos'],
-            synopsis: 'Compositor da trilha atmosférica de Ghost of Yotei. Mistura instrumentos tradicionais japoneses com orquestrações modernas.'
+            genres: ['Compositor', 'Trilha Sonora', 'Video Game'],
+            synopsis: 'Compositor japonês da trilha de Ghost of Yotei. Combina instrumentos tradicionais japoneses com orquestra moderna.'
         },
         'Woodkid & Ludvig Forssell - Death Stranding 2: On the Beach': {
-            genres: ['Compositor', 'Música', 'Jogos'],
-            synopsis: 'Colaboração entre Woodkid e Ludvig Forssell para a trilha de Death Stranding 2. Combina o estilo épico de Woodkid com a sensibilidade de Forssell.'
+            genres: ['Compositor', 'Trilha Sonora', 'Video Game'],
+            synopsis: 'Dupla de compositores para Death Stranding 2. Woodkid traz épico cinematográfico, Forssell mantém a identidade sonora de Kojima.'
         },
         'Ben Starr - Clair Obscur: Expedition 33': {
-            genres: ['Ator', 'Performance', 'Voz'],
-            synopsis: 'Ator que dá voz ao protagonista de Clair Obscur. Conhecido por suas performances emotivas e capacidade de transmitir profundidade emocional.'
+            genres: ['Ator', 'Dublagem', 'Video Game'],
+            synopsis: 'Dublador do protagonista de Clair Obscur. Conhecido por Clive em Final Fantasy XVI, traz intensidade emocional.'
         },
         'Charlie Cox': {
-            genres: ['Ator', 'Performance', 'Voz'],
-            synopsis: 'Ator que dá voz a um personagem importante em Clair Obscur. Reconhecido por seu trabalho como Demolidor e performances marcantes.'
+            genres: ['Ator', 'Dublagem', 'Video Game'],
+            synopsis: 'Ator britânico que dubla personagem em Clair Obscur. Famoso como Daredevil no MCU, traz profundidade dramática.'
         },
         'Erika Ishii': {
-            genres: ['Atriz', 'Performance', 'Voz'],
-            synopsis: 'Atriz que dá voz a personagens em Ghost of Yotei. Conhecida por suas performances intensas e versatilidade em diversos papéis.'
+            genres: ['Atriz', 'Dublagem', 'Video Game'],
+            synopsis: 'Dubladora de personagem em Ghost of Yotei. Voz versátil em vários jogos AAA com entrega emocional poderosa.'
         },
         'Jennifer English': {
-            genres: ['Atriz', 'Performance', 'Voz'],
-            synopsis: 'Atriz que dá voz a personagens em Clair Obscur. Reconhecida por sua atuação em Baldur\'s Gate 3 e performances cativantes.'
+            genres: ['Atriz', 'Dublagem', 'Video Game'],
+            synopsis: 'Dubladora de personagem em Clair Obscur. Conhecida por Shadowheart em Baldur\'s Gate 3, traz nuance complexa.'
         },
         'Konatsu Kato': {
-            genres: ['Atriz', 'Performance', 'Voz'],
-            synopsis: 'Atriz japonesa que dá voz a personagens em Silent Hill f. Conhecida por suas performances emotivas e versáteis em anime e jogos.'
+            genres: ['Atriz', 'Dublagem', 'Video Game'],
+            synopsis: 'Dubladora japonesa em Silent Hill f. Atuações em anime e games com especialidade em personagens perturbados.'
         },
         'Troy Baker': {
-            genres: ['Ator', 'Performance', 'Voz'],
-            synopsis: 'Ator que dá voz a Indiana Jones em Indiana Jones and the Great Circle. Um dos dubladores mais reconhecidos da indústria de jogos.'
+            genres: ['Ator', 'Dublagem', 'Video Game'],
+            synopsis: 'Dublador de Indiana Jones em Indiana Jones and the Great Circle. Lendário por Joel (The Last of Us) e outros ícones.'
         }
     };
     
-    // Dados das categorias
+    // Dados das categorias (com nomes formatados corretamente)
     const categoriesData = [
         { 
             id: 'game-of-the-year', 
@@ -970,10 +971,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${category.nominees.map(nominee => {
                     const isSelected = selectedGames[category.id] === nominee;
                     const imageUrl = getGameImageUrl(nominee);
-                    const info = gameInfo[nominee] || { 
-                        genres: [], 
-                        synopsis: 'Descrição não disponível no momento.' 
-                    };
+                    const info = gameInfo[nominee] || { genres: [], synopsis: 'Informações não disponíveis.' };
                     
                     return `
                         <div class="game-card ${isSelected ? 'selected' : ''}" 
@@ -982,7 +980,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="game-image">
                                 <img src="${imageUrl}" 
                                      alt="${nominee}"
-                                     onerror="this.src='https://via.placeholder.com/460x215/1a5e2c/ffffff?text=${encodeURIComponent(nominee.substring(0, 40))}'">
+                                     onerror="this.src='https://via.placeholder.com/400x200/1a5e2c/ffffff?text=${encodeURIComponent(nominee.substring(0, 30))}'">
                             </div>
                             <div class="game-info">
                                 <h3>${nominee}</h3>
@@ -1195,16 +1193,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const cleanGameName = gameName.split(' - ')[0];
         
         // Verifica se há URL específica no mapa
-        if (gameImages[cleanGameName]) {
-            return gameImages[cleanGameName];
-        }
-        
-        // Tenta encontrar por nome completo
         if (gameImages[gameName]) {
             return gameImages[gameName];
         }
         
-        // Placeholder genérico com tamanho Steam (460x215)
-        return `https://via.placeholder.com/460x215/1a5e2c/ffffff?text=${encodeURIComponent(gameName.substring(0, 40))}`;
+        if (gameImages[cleanGameName]) {
+            return gameImages[cleanGameName];
+        }
+        
+        // Placeholder genérico com tamanho ajustado (400x200)
+        return `https://via.placeholder.com/400x200/1a5e2c/ffffff?text=${encodeURIComponent(cleanGameName.substring(0, 30))}`;
     }
 });
