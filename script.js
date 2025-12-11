@@ -13,12 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentCategoryNumber = document.getElementById('currentCategoryNumber');
     const totalCategoriesSpan = document.getElementById('totalCategories');
     
-    // MAPA DE IMAGENS DOS JOGOS (ADICIONE AS URLs DA STEAM AQUI)
+    // MAPA DE IMAGENS DOS JOGOS (ATUALIZADO COM SUAS URLs)
     const gameImages = {
-        // Exemplo de estrutura:
-        // 'Nome do Jogo': 'https://cdn.akamai.steamstatic.com/steam/apps/XXXXXX/header.jpg',
-        
-        // Adicione suas URLs aqui:
         'Clair Obscur: Expedition 33': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1903340/be3305b02d4db0dffa3458537118423bf2792d7e/header.jpg?t=1762765069',
         'Death Stranding 2: On the Beach': 'https://i.ytimg.com/vi/6cs-A1rNvEE/maxresdefault.jpg',
         'Hades 2': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145350/91ac334a2c137d08968ccc0bc474a02579602100/header.jpg?t=1759973532',
@@ -32,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'The Outer Worlds 2': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1449110/fe273e39cbaf4997d1c8e53879800f07dba0ee03/header.jpg?t=1761760147',
         'Indiana Jones and the Great Circle': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2677660/5446adc6c89a73bcbc24c0eed16d8ced7f13f240/header_brazilian.jpg?t=1763745007',
         'Silent Hill f': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2947440/7e5d923ac622bd1775ebc9b5d4b5b0a24bf5ed40/header.jpg?t=1763007193',
-        'Assassin\'s Creed Shadows': 'https://clan.akamai.steamstatic.com/images/45310381/e9cc4f0447ef5bdb9b3c829524731abcb17f4af8_400x225.jpg',
+        "Assassin's Creed Shadows": 'https://clan.akamai.steamstatic.com/images/45310381/e9cc4f0447ef5bdb9b3c829524731abcb17f4af8_400x225.jpg',
         'Doom: The Dark Ages': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3017860/header.jpg?t=1764606093',
         'Battlefield 6': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2807960/c12d12ce3c7d217398d3fcad77427bfc9d57c570/header.jpg?t=1764700003',
         'Ninja Gaiden 4': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2627260/header.jpg?t=1762366827',
@@ -56,13 +52,13 @@ document.addEventListener('DOMContentLoaded', function() {
         'South of Midnight': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1934570/header.jpg?t=1744907120',
         '007: First Light': 'https://www.adrenaline.com.br/wp-content/uploads/2025/12/007-first-light-912x569.webp',
         'Grand Theft Auto 6': 'https://stories.cnnbrasil.com.br/wp-content/uploads/sites/9/2025/01/image_af9532.png',
-        'Marvel\'s Wolverine': 'https://image.api.playstation.com/vulcan/ap/rnd/202510/0721/0f8097282863ccd07abf4485a2bc733111127e628552207e.jpg',
+        "Marvel's Wolverine": 'https://image.api.playstation.com/vulcan/ap/rnd/202510/0721/0f8097282863ccd07abf4485a2bc733111127e628552207e.jpg',
         'Resident Evil: Requiem': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3764200/d478bccdd167e0d8e1f4760bcad7e6bcbbb3258d/header.jpg?t=1761795352',
         'The Witcher 4': 'https://levelupnews.com.br/wp-content/uploads/2025/06/18004cd0-5a82-437c-9186-b9de20b02b46-1.jpg',
         'Alien: Rogue Incursion': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3655390/0e501987ea970bd9aab9c2959b37f2e442d2079d/header.jpg?t=1759248016',
         'Arken Age': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2274200/header.jpg?t=1764175255',
         'Ghost Town': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2496180/header.jpg?t=1764089384',
-        'Marvel\'s Deadpool VR': 'https://lookaside.fbsbx.com/elementpath/media/?media_id=2536558160012725&version=1749480140&transcode_extension=webp',
+        "Marvel's Deadpool VR": 'https://lookaside.fbsbx.com/elementpath/media/?media_id=2536558160012725&version=1749480140&transcode_extension=webp',
         'The Midnight Walk': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2863640/header.jpg?t=1764152671',
         'Blue Prince': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1569580/879ac248a3b548a6bbc32771b950756378e7e922/header.jpg?t=1764595214',
         'Despelote': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2367820/header.jpg?t=1759948341',
@@ -76,11 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
         'Consume Me': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2359120/e8a024adceea4ab8f851274785ec7d62d8bf64fc/header.jpg?t=1758745344',
         'Lost Records: Bloom & Rage': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1902960/header.jpg?t=1762783814',
         'Wanderstop': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1299460/header.jpg?t=1764011216',
-        'Baldur\'s Gate 3': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/48a2fcbda8565bb45025e98fd8ebde8a7203f6a0/header.jpg?t=1759825106',
+        "Baldur's Gate 3": 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/48a2fcbda8565bb45025e98fd8ebde8a7203f6a0/header.jpg?t=1759825106',
         'Final Fantasy 14': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/39210/header.jpg?t=1760606311',
         'Fortnite': 'https://i.ytimg.com/vi/adGdyCdvKz4/maxresdefault.jpg',
         'Helldivers 2': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/553850/10b090a2f39571b0fbf3e3700276ecd857b9c1a8/header_brazilian.jpg?t=1763568660',
-        'No Man\'s Sky': 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/275850/5123063ede60c6db0f79497774f00de784db7358/header_alt_assets_25.jpg?t=1763984433',
+        "No Man's Sky": 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/275850/5123063ede60c6db0f79497774f00de784db7358/header_alt_assets_25.jpg?t=1763984433',
         'Um Filme Minecraft': 'https://akamai.sscdn.co/uploadfile/letras/playlists/0/f/0/c/0f0c0051d76042ad8fd1121e742718a1.jpg',
         'Devil May Cry': 'https://occ-0-8407-92.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABQokw-UFDcTGSOVLQKggWPpoAalrqT13KvtflIt9eV18K1T7x7chjziDFP3j9O3sC8ALGhbcIDBUfq6uslirp9oI6uZt_1iNrrou.jpg?r=47d',
         'Splinter Cell: Deathwatch': 'https://nexafeed.com/wp-content/uploads/2025/10/splinter-cell-deathwatch-1024x576.webp',
@@ -92,6 +88,302 @@ document.addEventListener('DOMContentLoaded', function() {
         'Umamusume: Pretty Derby': 'https://a.storyblok.com/f/178900/900x506/5c7ff66b5b/umamusume-game.jpg/m/filters:quality(95)format(webp)',
         'Wuthering Waves': 'https://play-lh.googleusercontent.com/7ePq9193_ivAh-yvYUQAeCuJEt3ixJsj3fEFmLM8O8B_BTQN4sxV8JhUGs4ENOe2WS5GrzjlTJKAmMam4kXiYRQ=w526-h296-rw',
         'Marvel Rivals': 'https://sm.ign.com/ign_br/news/m/marvel-riv/marvel-rivals-announced-a-6v6-superhero-team-based-free-to-p_8f6k.jpg'
+    };
+    
+    // INFORMAÇÕES DOS JOGOS (gêneros e sinopse)
+    const gameInfo = {
+        'Clair Obscur: Expedition 33': {
+            genres: ['RPG', 'Aventura', 'Fantasia'],
+            synopsis: 'Uma jornada épica através de paisagens surrealistas onde luz e sombra determinam o destino.'
+        },
+        'Death Stranding 2: On the Beach': {
+            genres: ['Ação', 'Aventura', 'Ficção Científica'],
+            synopsis: 'Continuação da épica saga de conexão em um mundo pós-apocalíptico fragmentado.'
+        },
+        'Hades 2': {
+            genres: ['Roguelike', 'Ação', 'Mitologia'],
+            synopsis: 'A sequência do aclamado rogue-like que explora o submundo da mitologia grega.'
+        },
+        'Hollow Knight: Silksong': {
+            genres: ['Metroidvania', 'Ação', 'Aventura'],
+            synopsis: 'A tão aguardada sequência do aclamado Hollow Knight, agora com Hornet como protagonista.'
+        },
+        'Kingdom Come: Deliverance 2': {
+            genres: ['RPG', 'Histórico', 'Mundo Aberto'],
+            synopsis: 'Continuação do RPG histórico realista ambientado na Europa Medieval.'
+        },
+        'Donkey Kong Bananza': {
+            genres: ['Plataforma', 'Aventura', 'Família'],
+            synopsis: 'Nova aventura do icônico gorila em uma ilha tropical cheia de segredos.'
+        },
+        'Ghost of Yotei': {
+            genres: ['Ação', 'Aventura', 'Stealth'],
+            synopsis: 'Aventura de ação e stealth ambientada no Japão feudal.'
+        },
+        'Split Fiction': {
+            genres: ['Ação', 'RPG', 'Ficção Científica'],
+            synopsis: 'Jogo de ação e RPG com narrativa não-linear e múltiplas realidades.'
+        },
+        'Avowed': {
+            genres: ['RPG', 'Ação', 'Fantasia'],
+            synopsis: 'RPG de mundo aberto da Obsidian ambientado no universo de Pillars of Eternity.'
+        },
+        'Monster Hunter Wilds': {
+            genres: ['Ação', 'RPG', 'Caça'],
+            synopsis: 'A mais nova entrada na série de caça a monstros com ambientes dinâmicos.'
+        },
+        'The Outer Worlds 2': {
+            genres: ['RPG', 'Ficção Científica', 'Ação'],
+            synopsis: 'Sequência do RPG espacial da Obsidian com novas histórias e planetas.'
+        },
+        'Indiana Jones and the Great Circle': {
+            genres: ['Ação', 'Aventura', 'Quebra-Cabeças'],
+            synopsis: 'Aventura do famoso arqueólogo em uma jornada ao redor do mundo.'
+        },
+        'Silent Hill f': {
+            genres: ['Terror', 'Sobrevivência', 'Psicológico'],
+            synopsis: 'Novo capítulo da aclamada série de terror psicológico.'
+        },
+        "Assassin's Creed Shadows": {
+            genres: ['Ação', 'Aventura', 'Stealth'],
+            synopsis: 'A nova entrada na série que explora o Japão feudal.'
+        },
+        'Doom: The Dark Ages': {
+            genres: ['Ação', 'FPS', 'Ficção Científica'],
+            synopsis: 'Prequela da série Doom ambientada na Idade Média.'
+        },
+        'Battlefield 6': {
+            genres: ['FPS', 'Multiplayer', 'Guerra'],
+            synopsis: 'A mais nova entrada na série de combate militar em larga escala.'
+        },
+        'Ninja Gaiden 4': {
+            genres: ['Ação', 'Hack and Slash', 'Aventura'],
+            synopsis: 'Retorno da clássica série de ação com combate preciso e desafiador.'
+        },
+        'Shinobi: Art of Vengeance': {
+            genres: ['Ação', 'Stealth', 'Aventura'],
+            synopsis: 'Reinvenção moderna da clássica série Shinobi.'
+        },
+        '2XKO': {
+            genres: ['Luta', 'Competitivo', 'Multiplayer'],
+            synopsis: 'Jogo de luta 2D baseado no universo de League of Legends.'
+        },
+        'Fatal Fury: City of the Wolves': {
+            genres: ['Luta', 'Arcade', 'Competitivo'],
+            synopsis: 'Nova entrada na clássica série de luta da SNK.'
+        },
+        'Mortal Kombat: Legacy Kollection': {
+            genres: ['Luta', 'Coleção', 'Arcade'],
+            synopsis: 'Coleção remasterizada dos clássicos Mortal Kombat.'
+        },
+        'Virtua Fighter 5 R.E.V.O. World Stage': {
+            genres: ['Luta', '3D', 'Competitivo'],
+            synopsis: 'Versão atualizada do clássico jogo de luta 3D.'
+        },
+        'Capcom Fighting Collection 2': {
+            genres: ['Luta', 'Coleção', 'Arcade'],
+            synopsis: 'Segunda coleção de jogos de luta clássicos da Capcom.'
+        },
+        'The Alters': {
+            genres: ['Estratégia', 'Simulação', 'Narrativa'],
+            synopsis: 'Jogo de estratégia com elementos narrativos profundos.'
+        },
+        'Final Fantasy Tactics - The Ivalice Chronicles': {
+            genres: ['RPG', 'Táticas', 'Fantasia'],
+            synopsis: 'Remake do clássico RPG tático com novo conteúdo.'
+        },
+        'Jurassic World Evolution 3': {
+            genres: ['Simulação', 'Estratégia', 'Gestão'],
+            synopsis: 'Simulador de parque temático com dinossauros.'
+        },
+        'Civilization 7': {
+            genres: ['Estratégia', 'Turnos', 'História'],
+            synopsis: 'A mais nova entrada na lendária série de estratégia por turnos.'
+        },
+        'Tempest Rising': {
+            genres: ['Estratégia', 'RTS', 'Guerra'],
+            synopsis: 'Jogo de estratégia em tempo real inspirado nos clássicos do gênero.'
+        },
+        'Two Point Museum': {
+            genres: ['Simulação', 'Gestão', 'Humor'],
+            synopsis: 'Simulador de museu com o humor característico da série Two Point.'
+        },
+        'Lego Party!': {
+            genres: ['Party Game', 'Família', 'Multijogador'],
+            synopsis: 'Jogo de festa com minijogos no universo Lego.'
+        },
+        'Lego Voyagers': {
+            genres: ['Aventura', 'Exploração', 'Família'],
+            synopsis: 'Aventura de exploração espacial no universo Lego.'
+        },
+        'Mario Kart World': {
+            genres: ['Corrida', 'Party Game', 'Família'],
+            synopsis: 'A mais nova entrada na série de corridas da Nintendo.'
+        },
+        'Sonic Racing: CrossWorlds': {
+            genres: ['Corrida', 'Arcade', 'Multijogador'],
+            synopsis: 'Jogo de corrida com personagens do universo Sonic.'
+        },
+        'Atomfall': {
+            genres: ['Ação', 'Sobrevivência', 'Mundo Aberto'],
+            synopsis: 'Jogo de sobrevivência em um mundo pós-apocalíptico.'
+        },
+        'South of Midnight': {
+            genres: ['Ação', 'Aventura', 'Fantasia'],
+            synopsis: 'Aventura de ação com elementos de folclore americano.'
+        },
+        '007: First Light': {
+            genres: ['Ação', 'Stealth', 'Espionagem'],
+            synopsis: 'Nova aventura do agente 007 com foco em espionagem.'
+        },
+        'Grand Theft Auto 6': {
+            genres: ['Ação', 'Mundo Aberto', 'Aventura'],
+            synopsis: 'A tão aguardada nova entrada na série de mundo aberto.'
+        },
+        "Marvel's Wolverine": {
+            genres: ['Ação', 'Aventura', 'Super-heróis'],
+            synopsis: 'Aventura de ação com o mutante mais famoso dos X-Men.'
+        },
+        'Resident Evil: Requiem': {
+            genres: ['Terror', 'Sobrevivência', 'Ação'],
+            synopsis: 'Novo capítulo na série de terror de sobrevivência.'
+        },
+        'The Witcher 4': {
+            genres: ['RPG', 'Ação', 'Fantasia'],
+            synopsis: 'A nova entrada na aclamada série de RPG de fantasia.'
+        },
+        'Alien: Rogue Incursion': {
+            genres: ['Terror', 'VR', 'Sobrevivência'],
+            synopsis: 'Experiência de terror em realidade virtual no universo Alien.'
+        },
+        'Arken Age': {
+            genres: ['RPG', 'Fantasia', 'Mundo Aberto'],
+            synopsis: 'RPG de fantasia com mundo aberto expansivo.'
+        },
+        'Ghost Town': {
+            genres: ['Terror', 'Exploração', 'Suspense'],
+            synopsis: 'Jogo de terror psicológico em uma cidade fantasma.'
+        },
+        "Marvel's Deadpool VR": {
+            genres: ['Ação', 'VR', 'Humor'],
+            synopsis: 'Experiência de ação em VR com o mercenário tagarela.'
+        },
+        'The Midnight Walk': {
+            genres: ['Terror', 'Exploração', 'Narrativa'],
+            synopsis: 'Jogo de terror narrativo com elementos de exploração.'
+        },
+        'Blue Prince': {
+            genres: ['RPG', 'Aventura', 'Puzzle'],
+            synopsis: 'RPG indie com elementos de puzzle e narrativa profunda.'
+        },
+        'Despelote': {
+            genres: ['Esporte', 'Futebol', 'Narrativa'],
+            synopsis: 'Jogo narrativo sobre futebol e cultura latino-americana.'
+        },
+        'Dispatch': {
+            genres: ['Ação', 'Estratégia', 'Táticas'],
+            synopsis: 'Jogo de ação tática com elementos de estratégia.'
+        },
+        'Megabonk': {
+            genres: ['Arcade', 'Ação', 'Multijogador'],
+            synopsis: 'Jogo de ação arcade com combate frenético.'
+        },
+        'Absolum': {
+            genres: ['Ação', 'RPG', 'Fantasia'],
+            synopsis: 'RPG de ação com combate dinâmico e mundo aberto.'
+        },
+        'Ball x Pit': {
+            genres: ['Esporte', 'Competitivo', 'Multijogador'],
+            synopsis: 'Jogo de esporte competitivo com física única.'
+        },
+        'Arc Raiders': {
+            genres: ['Ação', 'Co-op', 'Ficção Científica'],
+            synopsis: 'Jogo de ação cooperativo contra ameaças alienígenas.'
+        },
+        'Elden Ring: Nightreign': {
+            genres: ['RPG', 'Ação', 'Fantasia'],
+            synopsis: 'Expansão do aclamado RPG de ação da FromSoftware.'
+        },
+        'Peak': {
+            genres: ['Aventura', 'Exploração', 'Quebra-Cabeças'],
+            synopsis: 'Jogo de aventura e exploração em ambientes montanhosos.'
+        },
+        'Consume Me': {
+            genres: ['Terror', 'Psicológico', 'Narrativa'],
+            synopsis: 'Experiência de terror psicológico com narrativa profunda.'
+        },
+        'Lost Records: Bloom & Rage': {
+            genres: ['Narrativa', 'Aventura', 'Mistério'],
+            synopsis: 'Jogo narrativo sobre memórias perdidas e descobertas.'
+        },
+        'Wanderstop': {
+            genres: ['Simulação', 'Relaxante', 'Narrativa'],
+            synopsis: 'Simulador relaxante sobre cuidar de um jardim mágico.'
+        },
+        "Baldur's Gate 3": {
+            genres: ['RPG', 'Táticas', 'Fantasia'],
+            synopsis: 'RPG tático baseado em D&D com narrativa profunda.'
+        },
+        'Final Fantasy 14': {
+            genres: ['MMORPG', 'Fantasia', 'RPG'],
+            synopsis: 'MMORPG em constante evolução com expansões regulares.'
+        },
+        'Fortnite': {
+            genres: ['Battle Royale', 'Ação', 'Multijogador'],
+            synopsis: 'Battle royale em constante evolução com crossovers.'
+        },
+        'Helldivers 2': {
+            genres: ['Ação', 'Co-op', 'Ficção Científica'],
+            synopsis: 'Jogo de ação cooperativo por democracia galáctica.'
+        },
+        "No Man's Sky": {
+            genres: ['Exploração', 'Sobrevivência', 'Ficção Científica'],
+            synopsis: 'Simulador de exploração espacial com universo procedurally generated.'
+        },
+        'Um Filme Minecraft': {
+            genres: ['Aventura', 'Fantasia', 'Família'],
+            synopsis: 'Adaptação cinematográfica do universo Minecraft.'
+        },
+        'Devil May Cry': {
+            genres: ['Ação', 'Hack and Slash', 'Fantasia'],
+            synopsis: 'Adaptação live-action da série de ação Devil May Cry.'
+        },
+        'Splinter Cell: Deathwatch': {
+            genres: ['Ação', 'Stealth', 'Espionagem'],
+            synopsis: 'Adaptação live-action da série de espionagem.'
+        },
+        'The Last of Us': {
+            genres: ['Drama', 'Sobrevivência', 'Ação'],
+            synopsis: 'Série live-action baseada no aclamado jogo.'
+        },
+        'Until Dawn': {
+            genres: ['Terror', 'Narrativa', 'Suspense'],
+            synopsis: 'Adaptação do jogo de terror interativo.'
+        },
+        'Destiny Rising': {
+            genres: ['RPG', 'Ação', 'MMO'],
+            synopsis: 'Novo capítulo no universo Destiny com jogabilidade aprimorada.'
+        },
+        'Persona 5: The Phantom X': {
+            genres: ['RPG', 'Simulação', 'Fantasia'],
+            synopsis: 'Nova entrada na série Persona com novos personagens.'
+        },
+        'Sonic Rumble': {
+            genres: ['Battle Royale', 'Ação', 'Multijogador'],
+            synopsis: 'Battle royale com personagens do universo Sonic.'
+        },
+        'Umamusume: Pretty Derby': {
+            genres: ['Simulação', 'Esporte', 'Anime'],
+            synopsis: 'Jogo de simulação de corridas com garotas-cavalo.'
+        },
+        'Wuthering Waves': {
+            genres: ['RPG', 'Ação', 'Mundo Aberto'],
+            synopsis: 'RPG de ação com mundo aberto e combate fluido.'
+        },
+        'Marvel Rivals': {
+            genres: ['FPS', 'Hero Shooter', 'Multijogador'],
+            synopsis: 'Hero shooter 6v6 com personagens da Marvel.'
+        }
     };
     
     // Dados das categorias (com nomes formatados corretamente)
@@ -500,6 +792,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${category.nominees.map(nominee => {
                     const isSelected = selectedGames[category.id] === nominee;
                     const imageUrl = getGameImageUrl(nominee);
+                    const info = gameInfo[nominee] || { genres: [], synopsis: 'Informações não disponíveis.' };
                     
                     return `
                         <div class="game-card ${isSelected ? 'selected' : ''}" 
@@ -512,6 +805,17 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <div class="game-info">
                                 <h3>${nominee}</h3>
+                                
+                                ${info.genres && info.genres.length > 0 ? `
+                                    <div class="game-genres">
+                                        ${info.genres.slice(0, 3).map(genre => 
+                                            `<span class="genre-tag">${genre}</span>`
+                                        ).join('')}
+                                    </div>
+                                ` : ''}
+                                
+                                <p class="game-synopsis">${info.synopsis}</p>
+                                
                                 <div class="game-selected">
                                     <i class="fas fa-check-circle"></i> Selecionado
                                 </div>
@@ -693,7 +997,8 @@ document.addEventListener('DOMContentLoaded', function() {
             selections: selectedGames,
             mostVoted: {
                 game: mostVotedGame,
-                count: maxVotes
+                count: maxVotes,
+                image: getGameImageUrl(mostVotedGame)
             },
             timestamp: new Date().toISOString()
         };

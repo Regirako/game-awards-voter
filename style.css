@@ -179,7 +179,7 @@ body {
     margin: 0 auto;
 }
 
-/* Grid de Jogos - Tamanho Steam (460x215) */
+/* Grid de Jogos - Tamanho Steam (460x215) com informações */
 .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
@@ -196,6 +196,8 @@ body {
     border: 2px solid transparent;
     cursor: pointer;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .game-card:hover {
@@ -214,6 +216,7 @@ body {
     position: relative;
     height: 215px; /* Altura padrão Steam */
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .game-image img {
@@ -229,14 +232,42 @@ body {
 
 .game-info {
     padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .game-info h3 {
     font-size: 1.3rem;
     margin-bottom: 1rem;
     color: var(--text-light);
-    min-height: 3.5em;
     font-weight: 600;
+    line-height: 1.4;
+}
+
+.game-genres {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.genre-tag {
+    background: rgba(46, 204, 113, 0.2);
+    color: var(--light-green);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid var(--accent-green);
+}
+
+.game-synopsis {
+    color: #cccccc;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    flex: 1;
 }
 
 .game-selected {
@@ -244,9 +275,10 @@ body {
     color: var(--gold);
     font-weight: 600;
     font-size: 0.9rem;
-    margin-top: 1rem;
+    margin-top: auto;
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
 }
 
 .game-card.selected .game-selected {
