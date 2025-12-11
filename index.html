@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votação Game Awards 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header com Logo -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo-container">
+                <img src="assets/images/logo-game-awards.png" alt="Game Awards Logo" class="logo">
+                <h1>VOTAÇÃO GAME AWARDS <span class="year">2025</span></h1>
+            </div>
+            <p class="subtitle">Escolha os melhores jogos do ano em cada categoria</p>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <!-- Instruções -->
+        <section class="instructions">
+            <div class="instruction-card">
+                <i class="fas fa-vote-yea"></i>
+                <h3>Como votar</h3>
+                <p>Selecione um jogo para cada categoria abaixo. Após escolher todas as categorias, clique em "Finalizar Votação" para gerar seu card personalizado.</p>
+            </div>
+            <div class="instruction-card">
+                <i class="fas fa-gamepad"></i>
+                <h3>Jogos disponíveis</h3>
+                <p>Todos os jogos são indicados oficialmente ao Game Awards 2025. As informações são obtidas da Steam.</p>
+            </div>
+            <div class="instruction-card">
+                <i class="fas fa-award"></i>
+                <h3>Card de resultado</h3>
+                <p>Você receberá um card animado destacando suas escolhas e o jogo mais votado por você.</p>
+            </div>
+        </section>
+
+        <!-- Formulário de Votação -->
+        <form id="votingForm" class="voting-form">
+            <!-- Categoria 1 -->
+            <div class="category">
+                <h2><i class="fas fa-crown"></i> Jogo do Ano</h2>
+                <p class="category-description">O jogo mais excepcional em todos os aspectos criativos e técnicos.</p>
+                
+                <div class="games-grid">
+                    <div class="game-card" data-game="expedition33" data-category="game-of-the-year">
+                        <div class="game-image">
+                            <img src="assets/images/expedition33.jpg" alt="Expedition 33: Clair Obscur">
+                            <div class="game-overlay">
+                                <button type="button" class="select-btn" data-action="select">Selecionar</button>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Expedition 33: Clair Obscur</h3>
+                            <div class="game-genres">
+                                <span>RPG</span>
+                                <span>Aventura</span>
+                                <span>Fantasia</span>
+                            </div>
+                            <p class="game-synopsis">Uma jornada épica através de paisagens surrealistas onde luz e sombra determinam o destino. Enfrente criaturas únicas e desvende mistérios ancestrais.</p>
+                            <div class="game-selected">
+                                <i class="fas fa-check-circle"></i> Selecionado
+                            </div>
+                        </div>
+                        <input type="radio" name="game-of-the-year" value="expedition33" class="hidden-radio">
+                    </div>
+
+                    <div class="game-card" data-game="starforge" data-category="game-of-the-year">
+                        <div class="game-image">
+                            <img src="assets/images/starforge.jpg" alt="Starforge: Legends">
+                            <div class="game-overlay">
+                                <button type="button" class="select-btn" data-action="select">Selecionar</button>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Starforge: Legends</h3>
+                            <div class="game-genres">
+                                <span>Ficção Científica</span>
+                                <span>Estratégia</span>
+                                <span>Multiplayer</span>
+                            </div>
+                            <p class="game-synopsis">Construa impérios interestelares, participe de batalhas épicas e explore galáxias inexploradas neste ambicioso jogo de estratégia 4X.</p>
+                            <div class="game-selected">
+                                <i class="fas fa-check-circle"></i> Selecionado
+                            </div>
+                        </div>
+                        <input type="radio" name="game-of-the-year" value="starforge" class="hidden-radio">
+                    </div>
+
+                    <div class="game-card" data-game="astral-legends" data-category="game-of-the-year">
+                        <div class="game-image">
+                            <img src="assets/images/astral-legends.jpg" alt="Astral Legends Online">
+                            <div class="game-overlay">
+                                <button type="button" class="select-btn" data-action="select">Selecionar</button>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Astral Legends Online</h3>
+                            <div class="game-genres">
+                                <span>MMORPG</span>
+                                <span>Ação</span>
+                                <span>Fantasia</span>
+                            </div>
+                            <p class="game-synopsis">Um MMORPG expansivo com mundo aberto dinâmico, combate em tempo real e narrativa profunda que se adapta às suas escolhas.</p>
+                            <div class="game-selected">
+                                <i class="fas fa-check-circle"></i> Selecionado
+                            </div>
+                        </div>
+                        <input type="radio" name="game-of-the-year" value="astral-legends" class="hidden-radio">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categoria 2 -->
+            <div class="category">
+                <h2><i class="fas fa-gamepad"></i> Melhor Direção</h2>
+                <p class="category-description">Excelência na direção criativa e design de jogos.</p>
+                
+                <div class="games-grid">
+                    <div class="game-card" data-game="expedition33" data-category="best-direction">
+                        <div class="game-image">
+                            <img src="assets/images/expedition33.jpg" alt="Expedition 33: Clair Obscur">
+                            <div class="game-overlay">
+                                <button type="button" class="select-btn" data-action="select">Selecionar</button>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Expedition 33: Clair Obscur</h3>
+                            <div class="game-genres">
+                                <span>RPG</span>
+                                <span>Aventura</span>
+                                <span>Fantasia</span>
+                            </div>
+                            <p class="game-synopsis">Direção artística visionária que mescla técnicas de iluminação inovadoras com narrativa cinematográfica.</p>
+                            <div class="game-selected">
+                                <i class="fas fa-check-circle"></i> Selecionado
+                            </div>
+                        </div>
+                        <input type="radio" name="best-direction" value="expedition33" class="hidden-radio">
+                    </div>
+
+                    <div class="game-card" data-game="starforge" data-category="best-direction">
+                        <div class="game-image">
+                            <img src="assets/images/starforge.jpg" alt="Starforge: Legends">
+                            <div class="game-overlay">
+                                <button type="button" class="select-btn" data-action="select">Selecionar</button>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Starforge: Legends</h3>
+                            <div class="game-genres">
+                                <span>Ficção Científica</span>
+                                <span>Estratégia</span>
+                                <span>Multiplayer</span>
+                            </div>
+                            <p class="game-synopsis">Direção técnica magistral na criação de sistemas complexos que permanecem acessíveis e envolventes.</p>
+                            <div class="game-selected">
+                                <i class="fas fa-check-circle"></i> Selecionado
+                            </div>
+                        </div>
+                        <input type="radio" name="best-direction" value="starforge" class="hidden-radio">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categoria 3 -->
+            <div class="category">
+                <h2><i class="fas fa-palette"></i> Melhor Arte</h2>
+                <p class="category-description">Excelência em design visual, artístico e animação.</p>
+                
+                <div class="games-grid">
+                    <div class="game-card" data-game="expedition33" data-category="best-art">
+                        <div class="game-image">
+                            <img src="assets/images/expedition33.jpg" alt="Expedition 33: Clair Obscur">
+                            <div class="game-overlay">
+                                <button type="button" class="select-btn" data-action="select">Selecionar</button>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Expedition 33: Clair Obscur</h3>
+                            <div class="game-genres">
+                                <span>RPG</span>
+                                <span>Aventura</span>
+                                <span>Fantasia</span>
+                            </div>
+                            <p class="game-synopsis">Direção de arte impressionante com visuais pintados à mão e design de personagens memoráveis.</p>
+                            <div class="game-selected">
+                                <i class="fas fa-check-circle"></i> Selecionado
+                            </div>
+                        </div>
+                        <input type="radio" name="best-art" value="expedition33" class="hidden-radio">
+                    </div>
+
+                    <div class="game-card" data-game="astral-legends" data-category="best-art">
+                        <div class="game-image">
+                            <img src="assets/images/astral-legends.jpg" alt="Astral Legends Online">
+                            <div class="game-overlay">
+                                <button type="button" class="select-btn" data-action="select">Selecionar</button>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Astral Legends Online</h3>
+                            <div class="game-genres">
+                                <span>MMORPG</span>
+                                <span>Ação</span>
+                                <span>Fantasia</span>
+                            </div>
+                            <p class="game-synopsis">Mundo artisticamente coeso com arquitetura fantástica e efeitos visuais deslumbrantes.</p>
+                            <div class="game-selected">
+                                <i class="fas fa-check-circle"></i> Selecionado
+                            </div>
+                        </div>
+                        <input type="radio" name="best-art" value="astral-legends" class="hidden-radio">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de Envio -->
+            <div class="submit-container">
+                <button type="submit" class="submit-btn" id="submitVote">
+                    <i class="fas fa-trophy"></i> FINALIZAR VOTAÇÃO
+                </button>
+                <p class="form-note">Você pode alterar suas escolhas a qualquer momento antes de finalizar.</p>
+            </div>
+        </form>
+
+        <!-- Progresso da Votação -->
+        <div class="voting-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-text">Categorias preenchidas: <span id="progressCount">0</span> de 3</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>Votação não oficial do Game Awards 2025. Todos os direitos das imagens e jogos são de seus respectivos proprietários.</p>
+            <p>Dados coletados da Steam e do site oficial do Game Awards.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
