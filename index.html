@@ -26,33 +26,34 @@
 
     <!-- Conteúdo Principal -->
     <main class="container">
-        <!-- Instruções -->
-        <section class="instructions">
-            <div class="instruction-card">
-                <i class="fas fa-vote-yea"></i>
-                <h3>Como votar</h3>
-                <p>Selecione um jogo para cada categoria abaixo. Após escolher todas as categorias, clique em "Finalizar Votação" para gerar seu card personalizado.</p>
-            </div>
-            <div class="instruction-card">
-                <i class="fas fa-gamepad"></i>
-                <h3>Jogos disponíveis</h3>
-                <p>Todos os jogos são indicados oficialmente ao Game Awards 2025.</p>
-            </div>
-            <div class="instruction-card">
-                <i class="fas fa-chart-bar"></i>
-                <h3>Resultados em tempo real</h3>
-                <p>Veja as porcentagens de votos de todos os usuários após finalizar sua votação.</p>
-            </div>
-        </section>
-
-        <!-- Formulário de Votação -->
-        <form id="votingForm" class="voting-form">
+        <!-- Navegação por Categorias -->
+        <div class="category-navigation" id="categoryNavigation">
             <!-- As categorias serão inseridas via JavaScript -->
-        </form>
+        </div>
 
-        <!-- Botão de Envio -->
+        <!-- Container da Categoria Atual -->
+        <div class="current-category-container" id="currentCategoryContainer">
+            <!-- A categoria atual será carregada aqui -->
+        </div>
+
+        <!-- Controles de Navegação -->
+        <div class="navigation-controls" id="navigationControls">
+            <button class="nav-btn prev-btn" id="prevCategoryBtn" disabled>
+                <i class="fas fa-chevron-left"></i> Categoria Anterior
+            </button>
+            
+            <div class="category-counter">
+                <span id="currentCategoryNumber">1</span> de <span id="totalCategories">30</span>
+            </div>
+            
+            <button class="nav-btn next-btn" id="nextCategoryBtn">
+                Próxima Categoria <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Botão Finalizar -->
         <div class="submit-container">
-            <button type="submit" class="submit-btn" id="submitVote" disabled>
+            <button class="submit-btn" id="finalizeVoteBtn">
                 <i class="fas fa-trophy"></i> FINALIZAR VOTAÇÃO
             </button>
             <p class="form-note">Você precisa selecionar uma opção em todas as categorias antes de finalizar.</p>
@@ -63,7 +64,7 @@
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            <p class="progress-text">Categorias preenchidas: <span id="progressCount">0</span> de <span id="totalCategories">0</span></p>
+            <p class="progress-text">Categorias preenchidas: <span id="progressCount">0</span> de <span id="totalCategoriesCount">30</span></p>
         </div>
     </main>
 
