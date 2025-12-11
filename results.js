@@ -1,39 +1,11 @@
 // results.js - Lógica da página de resultados
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Dados dos jogos
-    const gamesData = {
-        'expedition33': {
-            name: 'Expedition 33: Clair Obscur',
-            image: 'assets/images/expedition33.jpg',
-            genres: ['RPG', 'Aventura', 'Fantasia'],
-            description: 'Uma jornada épica através de paisagens surrealistas onde luz e sombra determinam o destino.'
-        },
-        'starforge': {
-            name: 'Starforge: Legends',
-            image: 'assets/images/starforge.jpg',
-            genres: ['Ficção Científica', 'Estratégia', 'Multiplayer'],
-            description: 'Construa impérios interestelares, participe de batalhas épicas e explore galáxias inexploradas.'
-        },
-        'astral-legends': {
-            name: 'Astral Legends Online',
-            image: 'assets/images/astral-legends.jpg',
-            genres: ['MMORPG', 'Ação', 'Fantasia'],
-            description: 'Um MMORPG expansivo com mundo aberto dinâmico e narrativa profunda adaptativa.'
-        }
-    };
-    
-    // Mapeamento de categorias
-    const categoriesMap = {
-        'game-of-the-year': 'Jogo do Ano',
-        'best-direction': 'Melhor Direção',
-        'best-art': 'Melhor Arte'
-    };
-    
     // Elementos do DOM
     const selectionsContainer = document.getElementById('selectionsContainer');
     const mostVotedGame = document.getElementById('mostVotedGame');
     const mostVotedCount = document.getElementById('mostVotedCount');
+    const totalVotes = document.getElementById('totalVotes');
     const shareBtn = document.getElementById('shareBtn');
     const newVoteBtn = document.getElementById('newVoteBtn');
     const resultCard = document.getElementById('resultCard');
@@ -48,181 +20,183 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    const { selections, mostVoted } = votingData;
+    const { selections, mostVoted, voteStats } = votingData;
+    
+    // Mapeamento de IDs para nomes de categorias
+    const categoriesMap = {
+        'game-of-the-year': 'Jogo do ano',
+        'best-direction': 'Melhor direção',
+        'best-esports-team': 'Melhor time de esports',
+        'best-esports-athlete': 'Melhor atleta de esports',
+        'best-esports-game': 'Melhor jogo de esports',
+        'best-sports-racing': 'Melhor jogo de esporte/corrida',
+        'best-strategy-sim': 'Melhor jogo de simulação/estratégia',
+        'best-family-game': 'Melhor jogo para a família',
+        'innovation-accessibility': 'Inovação em acessibilidade',
+        'best-action-game': 'Melhor jogo de ação',
+        'best-fighting-game': 'Melhor jogo de luta',
+        'best-rpg': 'Melhor jogo de RPG',
+        'best-action-adventure': 'Melhor jogo de ação/aventura',
+        'most-anticipated': 'Jogo mais aguardado',
+        'content-creator-year': 'Criador de conteúdo do ano',
+        'best-vr-ar': 'Melhor jogo de realidade virtual/realidade aumentada',
+        'best-debut-indie': 'Melhor jogo de estreia independente',
+        'best-indie-game': 'Melhor jogo independente',
+        'best-multiplayer': 'Melhor multiplayer',
+        'games-for-impact': 'Games for impact',
+        'best-community-support': 'Melhor apoio à comunidade',
+        'best-narrative': 'Melhor narrativa',
+        'best-adaptation': 'Melhor adaptação',
+        'best-audio-design': 'Melhor direção de som',
+        'best-score-music': 'Melhor trilha e música',
+        'best-art-direction': 'Melhor direção de arte',
+        'best-mobile-game': 'Melhor jogo para dispositivos móveis',
+        'best-ongoing-game': 'Melhor jogo em atualização',
+        'best-performance': 'Melhor atuação'
+    };
+    
+    // Calcular estatísticas gerais
+    let totalGlobalVotes = 0;
+    if (voteStats) {
+        Object.values(voteStats).forEach(categoryVotes => {
+            Object.values(categoryVotes).forEach(voteCount => {
+                totalGlobalVotes += voteCount;
+            });
+        });
+    }
+    
+    // Exibir total de votos
+    totalVotes.textContent = `${totalGlobalVotes} votos registrados`;
     
     // Exibir seleções
     displaySelections(selections);
     
-    // Exibir jogo mais votado
+    // Exibir jogo mais votado pelo usuário
     displayMostVoted(mostVoted);
     
     // Configurar botões
     setupButtons();
     
-    // Adicionar efeitos especiais
-    addSpecialEffects();
-    
     // Função para exibir as seleções
     function displaySelections(selections) {
         selectionsContainer.innerHTML = '';
         
-        Object.entries(selections).forEach(([category, gameId]) => {
-            const game = gamesData[gameId];
-            const categoryName = categoriesMap[category];
+        // Mostrar apenas as primeiras 5 categorias para manter minimalista
+        const displayedSelections = Object.entries(selections).slice(0, 8);
+        
+        displayedSelections.forEach(([categoryId, gameName], index) => {
+            const categoryName = categoriesMap[categoryId] || categoryId;
             
-            if (!game) return;
+            // Calcular porcentagem global
+            let globalPercentage = 0;
+            if (voteStats && voteStats[categoryId] && voteStats[categoryId][gameName] !== undefined) {
+                const categoryVotes = voteStats[categoryId];
+                const totalCategoryVotes = Object.values(categoryVotes).reduce((a, b) => a + b, 0);
+                if (totalCategoryVotes > 0) {
+                    globalPercentage = (categoryVotes[gameName] / totalCategoryVotes) * 100;
+                }
+            }
             
             const selectionItem = document.createElement('div');
             selectionItem.className = 'selection-item';
+            selectionItem.style.animationDelay = `${index * 0.1}s`;
             
             selectionItem.innerHTML = `
-                <h3 class="category-title">
+                <div class="category-title">
                     <i class="fas fa-award"></i> ${categoryName}
-                </h3>
-                <h4 class="game-title">${game.name}</h4>
-                <p>${game.description}</p>
-                <div class="game-info">
-                    <img src="${game.image}" alt="${game.name}" class="game-image-small">
-                    <div class="game-details">
-                        <div class="game-genres-small">
-                            ${game.genres.map(genre => `<span>${genre}</span>`).join('')}
-                        </div>
-                        <p><strong>Indicado para:</strong> ${categoryName}</p>
+                </div>
+                <div class="game-title">${gameName}</div>
+                <div class="global-stats">
+                    <div class="global-bar">
+                        <div class="global-fill" style="width: ${globalPercentage}%"></div>
                     </div>
+                    <div class="global-percentage">${globalPercentage.toFixed(1)}%</div>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--light-green); margin-top: 5px;">
+                    ${globalPercentage.toFixed(1)}% dos votos nesta categoria
                 </div>
             `;
             
             selectionsContainer.appendChild(selectionItem);
         });
+        
+        // Se houver mais categorias, mostrar contador
+        if (Object.keys(selections).length > 8) {
+            const remainingCount = Object.keys(selections).length - 8;
+            const remainingItem = document.createElement('div');
+            remainingItem.className = 'selection-item';
+            remainingItem.style.textAlign = 'center';
+            remainingItem.style.padding = '1rem';
+            remainingItem.innerHTML = `
+                <div class="category-title">
+                    <i class="fas fa-ellipsis-h"></i> Mais ${remainingCount} categorias
+                </div>
+                <div style="color: var(--light-green); font-size: 0.9rem;">
+                    Total de ${Object.keys(selections).length} categorias votadas
+                </div>
+            `;
+            selectionsContainer.appendChild(remainingItem);
+        }
     }
     
-    // Função para exibir o jogo mais votado
+    // Função para exibir o jogo mais votado pelo usuário
     function displayMostVoted(mostVoted) {
-        const game = gamesData[mostVoted.game];
+        if (!mostVoted || !mostVoted.game) return;
         
-        if (!game) return;
-        
-        mostVotedGame.textContent = game.name;
+        mostVotedGame.textContent = mostVoted.game;
         
         const categoryText = mostVoted.count === 1 ? 
             '1 categoria' : 
             `${mostVoted.count} categorias`;
         
         mostVotedCount.textContent = `Indicado em ${categoryText}`;
-        
-        // Destacar o jogo mais votado
-        highlightMostVotedGame(mostVoted.game);
-    }
-    
-    // Função para destacar o jogo mais votado
-    function highlightMostVotedGame(gameId) {
-        // Encontrar todos os itens do jogo mais votado
-        const gameItems = document.querySelectorAll('.selection-item');
-        
-        gameItems.forEach(item => {
-            const gameTitle = item.querySelector('.game-title');
-            if (gameTitle && gameTitle.textContent.includes(gamesData[gameId].name)) {
-                item.style.borderLeftColor = 'var(--gold)';
-                item.style.background = 'rgba(255, 215, 0, 0.05)';
-                
-                // Adicionar ícone de estrela
-                const categoryTitle = item.querySelector('.category-title');
-                const starIcon = document.createElement('i');
-                starIcon.className = 'fas fa-star';
-                starIcon.style.color = 'var(--gold)';
-                starIcon.style.marginLeft = '10px';
-                categoryTitle.appendChild(starIcon);
-            }
-        });
     }
     
     // Configurar botões de ação
     function setupButtons() {
         // Botão de compartilhar
         shareBtn.addEventListener('click', function() {
-            // Criar imagem do card para compartilhamento
-            html2canvas(resultCard).then(canvas => {
-                // Converter para data URL
-                const imageData = canvas.toDataURL('image/png');
-                
-                // Criar um link temporário para download
-                const link = document.createElement('a');
-                link.download = 'meu-voto-game-awards-2025.png';
-                link.href = imageData;
-                link.click();
-                
-                // Feedback visual
-                showNotification('Imagem baixada! Agora você pode compartilhar nas redes sociais.');
+            // Criar texto para compartilhamento
+            let shareText = `🎮 Minha votação no Game Awards 2025:\n\n`;
+            
+            Object.entries(votingData.selections).forEach(([categoryId, gameName], index) => {
+                if (index < 3) { // Mostrar apenas 3 categorias no compartilhamento
+                    const categoryName = categoriesMap[categoryId] || categoryId;
+                    shareText += `${categoryName}: ${gameName}\n`;
+                }
             });
+            
+            shareText += `\nMeu jogo favorito: ${votingData.mostVoted.game}\n`;
+            shareText += `#GameAwards2025 #Votação`;
+            
+            // Tentar usar Web Share API se disponível
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Minha votação - Game Awards 2025',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                // Fallback: copiar para área de transferência
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showNotification('Votação copiada para a área de transferência! Cole nas redes sociais.');
+                }).catch(() => {
+                    // Fallback mais simples
+                    const textArea = document.createElement('textarea');
+                    textArea.value = shareText;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showNotification('Votação copiada para a área de transferência!');
+                });
+            }
         });
         
         // Botão de nova votação
         newVoteBtn.addEventListener('click', function() {
-            // Adicionar efeito de transição
-            resultCard.style.animation = 'cardEntrance 0.5s ease-in reverse';
-            
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 500);
+            window.location.href = 'index.html';
         });
-    }
-    
-    // Adicionar efeitos especiais
-    function addSpecialEffects() {
-        // Efeito de partículas
-        createParticles();
-        
-        // Efeito de brilho intermitente
-        setInterval(() => {
-            const glowIntensity = Math.random() * 0.5 + 0.5;
-            resultCard.style.boxShadow = 
-                `0 20px 50px rgba(0, 0, 0, 0.5),
-                 0 0 ${100 * glowIntensity}px rgba(41, 98, 255, ${0.3 * glowIntensity}),
-                 inset 0 0 ${50 * glowIntensity}px rgba(255, 215, 0, ${0.1 * glowIntensity})`;
-        }, 2000);
-        
-        // Efeito de rotação sutil no cursor
-        document.addEventListener('mousemove', function(e) {
-            const x = e.clientX / window.innerWidth - 0.5;
-            const y = e.clientY / window.innerHeight - 0.5;
-            
-            resultCard.style.transform = `
-                perspective(1000px) 
-                rotateY(${x * 2}deg) 
-                rotateX(${y * -2}deg)
-                translateY(${Math.sin(Date.now() / 1000) * 5}px)
-            `;
-        });
-    }
-    
-    // Criar partículas flutuantes
-    function createParticles() {
-        const particlesContainer = document.querySelector('.floating-bg');
-        
-        for (let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'floating-element';
-            
-            // Tamanho e posição aleatórios
-            const size = Math.random() * 60 + 20;
-            const posX = Math.random() * 100;
-            const posY = Math.random() * 100;
-            const delay = Math.random() * -20;
-            const duration = Math.random() * 20 + 20;
-            
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.left = `${posX}%`;
-            particle.style.top = `${posY}%`;
-            particle.style.animationDelay = `${delay}s`;
-            particle.style.animationDuration = `${duration}s`;
-            particle.style.opacity = Math.random() * 0.3 + 0.1;
-            particle.style.background = `radial-gradient(circle, 
-                rgba(41, 98, 255, ${Math.random() * 0.3 + 0.1}) 0%, 
-                rgba(255, 215, 0, ${Math.random() * 0.1}) 100%)`;
-            
-            particlesContainer.appendChild(particle);
-        }
     }
     
     // Mostrar notificação
@@ -232,51 +206,56 @@ document.addEventListener('DOMContentLoaded', function() {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: var(--accent-blue);
+            background: var(--accent-green);
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
             z-index: 10000;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideInRight 0.3s ease-out;
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
+            max-width: 300px;
         `;
         
         notification.textContent = message;
         document.body.appendChild(notification);
         
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease-in';
+            notification.style.animation = 'slideOutRight 0.3s ease-in';
             setTimeout(() => {
                 document.body.removeChild(notification);
             }, 300);
         }, 3000);
         
-        // Adicionar animação de saída
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
+        // Adicionar animações CSS
+        if (!document.querySelector('#notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
                 }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
+                
+                @keyframes slideOutRight {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
                 }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    // Adicionar biblioteca html2canvas via CDN se necessário
-    if (typeof html2canvas === 'undefined') {
-        const script = document.createElement('script');
-        script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-        script.onload = function() {
-            console.log('html2canvas carregado para compartilhamento de imagem');
-        };
-        document.head.appendChild(script);
+            `;
+            document.head.appendChild(style);
+        }
     }
 });
