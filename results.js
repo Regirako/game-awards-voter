@@ -5,10 +5,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectionsContainer = document.getElementById('selectionsContainer');
     const mostVotedGame = document.getElementById('mostVotedGame');
     const mostVotedCount = document.getElementById('mostVotedCount');
-    const totalVotes = document.getElementById('totalVotes');
+    const mostVotedImage = document.getElementById('mostVotedImage');
+    const categoriesCount = document.getElementById('categoriesCount');
+    const totalGames = document.getElementById('totalGames');
     const shareBtn = document.getElementById('shareBtn');
     const newVoteBtn = document.getElementById('newVoteBtn');
     const resultCard = document.getElementById('resultCard');
+    
+    // Mapa de imagens (mesmo do script.js)
+    const gameImages = {
+        // Adicione suas URLs aqui posteriormente
+    };
     
     // Recuperar dados da votação
     const votingData = JSON.parse(localStorage.getItem('gameAwardsVotes'));
@@ -20,59 +27,49 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    const { selections, mostVoted, voteStats } = votingData;
+    const { selections, mostVoted } = votingData;
     
     // Mapeamento de IDs para nomes de categorias
     const categoriesMap = {
-        'game-of-the-year': 'Jogo do ano',
-        'best-direction': 'Melhor direção',
-        'best-esports-team': 'Melhor time de esports',
-        'best-esports-athlete': 'Melhor atleta de esports',
-        'best-esports-game': 'Melhor jogo de esports',
-        'best-sports-racing': 'Melhor jogo de esporte/corrida',
-        'best-strategy-sim': 'Melhor jogo de simulação/estratégia',
-        'best-family-game': 'Melhor jogo para a família',
-        'innovation-accessibility': 'Inovação em acessibilidade',
-        'best-action-game': 'Melhor jogo de ação',
-        'best-fighting-game': 'Melhor jogo de luta',
-        'best-rpg': 'Melhor jogo de RPG',
-        'best-action-adventure': 'Melhor jogo de ação/aventura',
-        'most-anticipated': 'Jogo mais aguardado',
-        'content-creator-year': 'Criador de conteúdo do ano',
-        'best-vr-ar': 'Melhor jogo de realidade virtual/realidade aumentada',
-        'best-debut-indie': 'Melhor jogo de estreia independente',
-        'best-indie-game': 'Melhor jogo independente',
-        'best-multiplayer': 'Melhor multiplayer',
-        'games-for-impact': 'Games for impact',
-        'best-community-support': 'Melhor apoio à comunidade',
-        'best-narrative': 'Melhor narrativa',
-        'best-adaptation': 'Melhor adaptação',
-        'best-audio-design': 'Melhor direção de som',
-        'best-score-music': 'Melhor trilha e música',
-        'best-art-direction': 'Melhor direção de arte',
-        'best-mobile-game': 'Melhor jogo para dispositivos móveis',
-        'best-ongoing-game': 'Melhor jogo em atualização',
-        'best-performance': 'Melhor atuação'
+        'game-of-the-year': 'Jogo do Ano',
+        'best-direction': 'Melhor Direção',
+        'best-esports-team': 'Melhor Time de Esports',
+        'best-esports-athlete': 'Melhor Atleta de Esports',
+        'best-esports-game': 'Melhor Jogo de Esports',
+        'best-sports-racing': 'Melhor Jogo de Esporte/Corrida',
+        'best-strategy-sim': 'Melhor Jogo de Simulação/Estratégia',
+        'best-family-game': 'Melhor Jogo para a Família',
+        'innovation-accessibility': 'Inovação em Acessibilidade',
+        'best-action-game': 'Melhor Jogo de Ação',
+        'best-fighting-game': 'Melhor Jogo de Luta',
+        'best-rpg': 'Melhor Jogo de RPG',
+        'best-action-adventure': 'Melhor Jogo de Ação/Aventura',
+        'most-anticipated': 'Jogo Mais Aguardado',
+        'content-creator-year': 'Criador de Conteúdo do Ano',
+        'best-vr-ar': 'Melhor Jogo de Realidade Virtual/Realidade Aumentada',
+        'best-debut-indie': 'Melhor Jogo de Estreia Independente',
+        'best-indie-game': 'Melhor Jogo Independente',
+        'best-multiplayer': 'Melhor Multiplayer',
+        'games-for-impact': 'Games for Impact',
+        'best-community-support': 'Melhor Apoio à Comunidade',
+        'best-narrative': 'Melhor Narrativa',
+        'best-adaptation': 'Melhor Adaptação',
+        'best-audio-design': 'Melhor Direção de Som',
+        'best-score-music': 'Melhor Trilha e Música',
+        'best-art-direction': 'Melhor Direção de Arte',
+        'best-mobile-game': 'Melhor Jogo para Dispositivos Móveis',
+        'best-ongoing-game': 'Melhor Jogo em Atualização',
+        'best-performance': 'Melhor Atuação'
     };
-    
-    // Calcular estatísticas gerais
-    let totalGlobalVotes = 0;
-    if (voteStats) {
-        Object.values(voteStats).forEach(categoryVotes => {
-            Object.values(categoryVotes).forEach(voteCount => {
-                totalGlobalVotes += voteCount;
-            });
-        });
-    }
-    
-    // Exibir total de votos
-    totalVotes.textContent = `${totalGlobalVotes} votos registrados`;
     
     // Exibir seleções
     displaySelections(selections);
     
     // Exibir jogo mais votado pelo usuário
     displayMostVoted(mostVoted);
+    
+    // Atualizar estatísticas
+    updateStats(selections, mostVoted);
     
     // Configurar botões
     setupButtons();
@@ -81,21 +78,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function displaySelections(selections) {
         selectionsContainer.innerHTML = '';
         
-        // Mostrar apenas as primeiras 5 categorias para manter minimalista
+        // Mostrar apenas as primeiras 8 categorias para manter minimalista
         const displayedSelections = Object.entries(selections).slice(0, 8);
         
         displayedSelections.forEach(([categoryId, gameName], index) => {
             const categoryName = categoriesMap[categoryId] || categoryId;
-            
-            // Calcular porcentagem global
-            let globalPercentage = 0;
-            if (voteStats && voteStats[categoryId] && voteStats[categoryId][gameName] !== undefined) {
-                const categoryVotes = voteStats[categoryId];
-                const totalCategoryVotes = Object.values(categoryVotes).reduce((a, b) => a + b, 0);
-                if (totalCategoryVotes > 0) {
-                    globalPercentage = (categoryVotes[gameName] / totalCategoryVotes) * 100;
-                }
-            }
             
             const selectionItem = document.createElement('div');
             selectionItem.className = 'selection-item';
@@ -106,14 +93,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <i class="fas fa-award"></i> ${categoryName}
                 </div>
                 <div class="game-title">${gameName}</div>
-                <div class="global-stats">
-                    <div class="global-bar">
-                        <div class="global-fill" style="width: ${globalPercentage}%"></div>
-                    </div>
-                    <div class="global-percentage">${globalPercentage.toFixed(1)}%</div>
-                </div>
-                <div style="font-size: 0.8rem; color: var(--light-green); margin-top: 5px;">
-                    ${globalPercentage.toFixed(1)}% dos votos nesta categoria
+                <div style="font-size: 0.8rem; color: var(--light-green);">
+                    Sua escolha para esta categoria
                 </div>
             `;
             
@@ -143,59 +124,134 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayMostVoted(mostVoted) {
         if (!mostVoted || !mostVoted.game) return;
         
-        mostVotedGame.textContent = mostVoted.game;
+        const gameName = mostVoted.game;
+        mostVotedGame.textContent = gameName;
         
         const categoryText = mostVoted.count === 1 ? 
             '1 categoria' : 
             `${mostVoted.count} categorias`;
         
         mostVotedCount.textContent = `Indicado em ${categoryText}`;
+        
+        // Adicionar imagem do jogo favorito
+        const imageUrl = getGameImageUrl(gameName);
+        mostVotedImage.innerHTML = `
+            <img src="${imageUrl}" 
+                 alt="${gameName}"
+                 onerror="this.src='https://via.placeholder.com/300x141/1a5e2c/ffffff?text=${encodeURIComponent(gameName.substring(0, 30))}'">
+        `;
+        
+        // Adicionar destaque visual para o jogo favorito
+        highlightFavoriteGame(gameName);
+    }
+    
+    // Função para atualizar estatísticas
+    function updateStats(selections, mostVoted) {
+        // Contar categorias votadas
+        categoriesCount.textContent = Object.keys(selections).length;
+        
+        // Contar total de jogos únicos votados
+        const uniqueGames = new Set(Object.values(selections));
+        totalGames.textContent = uniqueGames.size;
+    }
+    
+    // Função para destacar o jogo favorito nas seleções
+    function highlightFavoriteGame(favoriteGame) {
+        const selectionItems = selectionsContainer.querySelectorAll('.selection-item');
+        
+        selectionItems.forEach(item => {
+            const gameTitle = item.querySelector('.game-title');
+            if (gameTitle && gameTitle.textContent === favoriteGame) {
+                item.style.borderLeftColor = 'var(--gold)';
+                item.style.background = 'rgba(255, 215, 0, 0.05)';
+                
+                // Adicionar ícone de coroa
+                const categoryTitle = item.querySelector('.category-title');
+                if (categoryTitle) {
+                    const crownIcon = document.createElement('i');
+                    crownIcon.className = 'fas fa-crown';
+                    crownIcon.style.color = 'var(--gold)';
+                    crownIcon.style.marginLeft = '10px';
+                    categoryTitle.appendChild(crownIcon);
+                }
+            }
+        });
+    }
+    
+    // Função para obter URL da imagem do jogo
+    function getGameImageUrl(gameName) {
+        // Remove informações extras
+        const cleanGameName = gameName.split(' - ')[0];
+        
+        // Verifica se há URL específica no mapa
+        if (gameImages[cleanGameName]) {
+            return gameImages[cleanGameName];
+        }
+        
+        // Placeholder genérico
+        return `https://via.placeholder.com/300x141/1a5e2c/ffffff?text=${encodeURIComponent(cleanGameName.substring(0, 30))}`;
     }
     
     // Configurar botões de ação
     function setupButtons() {
-        // Botão de compartilhar
+        // Botão de capturar card (screenshot)
         shareBtn.addEventListener('click', function() {
-            // Criar texto para compartilhamento
-            let shareText = `🎮 Minha votação no Game Awards 2025:\n\n`;
-            
-            Object.entries(votingData.selections).forEach(([categoryId, gameName], index) => {
-                if (index < 3) { // Mostrar apenas 3 categorias no compartilhamento
-                    const categoryName = categoriesMap[categoryId] || categoryId;
-                    shareText += `${categoryName}: ${gameName}\n`;
-                }
-            });
-            
-            shareText += `\nMeu jogo favorito: ${votingData.mostVoted.game}\n`;
-            shareText += `#GameAwards2025 #Votação`;
-            
-            // Tentar usar Web Share API se disponível
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Minha votação - Game Awards 2025',
-                    text: shareText,
-                    url: window.location.href
-                }).catch(console.error);
-            } else {
-                // Fallback: copiar para área de transferência
-                navigator.clipboard.writeText(shareText).then(() => {
-                    showNotification('Votação copiada para a área de transferência! Cole nas redes sociais.');
-                }).catch(() => {
-                    // Fallback mais simples
-                    const textArea = document.createElement('textarea');
-                    textArea.value = shareText;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    showNotification('Votação copiada para a área de transferência!');
-                });
-            }
+            captureCardScreenshot();
         });
         
         // Botão de nova votação
         newVoteBtn.addEventListener('click', function() {
             window.location.href = 'index.html';
+        });
+    }
+    
+    // Função para capturar screenshot do card
+    function captureCardScreenshot() {
+        // Verificar se html2canvas está carregado
+        if (typeof html2canvas === 'undefined') {
+            alert('A funcionalidade de captura está carregando. Por favor, aguarde alguns segundos e tente novamente.');
+            return;
+        }
+        
+        // Mostrar mensagem de processamento
+        shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+        shareBtn.disabled = true;
+        
+        // Capturar o card
+        html2canvas(resultCard, {
+            backgroundColor: null,
+            scale: 2, // Maior resolução
+            useCORS: true, // Permitir imagens externas
+            logging: false
+        }).then(canvas => {
+            // Converter para data URL
+            const imageData = canvas.toDataURL('image/png');
+            
+            // Criar link para download
+            const link = document.createElement('a');
+            link.download = `meu-voto-game-awards-${new Date().getTime()}.png`;
+            link.href = imageData;
+            
+            // Disparar download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Restaurar botão
+            shareBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar Card';
+            shareBtn.disabled = false;
+            
+            // Mostrar notificação
+            showNotification('Card salvo como imagem! Agora você pode compartilhar.');
+            
+        }).catch(error => {
+            console.error('Erro ao capturar screenshot:', error);
+            
+            // Restaurar botão
+            shareBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar Card';
+            shareBtn.disabled = false;
+            
+            showNotification('Erro ao capturar o card. Tente novamente.');
         });
     }
     
@@ -228,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }, 3000);
         
-        // Adicionar animações CSS
+        // Adicionar animações CSS se necessário
         if (!document.querySelector('#notification-styles')) {
             const style = document.createElement('style');
             style.id = 'notification-styles';
