@@ -3,555 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados - Ecológica Game Awards 2025</title>
+    <title>Votação Ecológica Game Awards 2025</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Biblioteca html2canvas para print -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        /* Estilos globais */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #0c1a14 0%, #1a2b22 100%);
-            color: #ecf0f1;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-
-        /* Loader/Preparação */
-        .preparing {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-            color: #2ecc71;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        /* Botão votar novamente */
-        .vote-again-btn {
-            display: block;
-            width: 250px;
-            margin: 30px auto;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #2ecc71 0%, #1abc9c 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            text-decoration: none;
-            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
-        }
-
-        .vote-again-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(46, 204, 113, 0.4);
-        }
-
-        /* Ajustes responsivos */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .vote-again-btn {
-                width: 100%;
-                max-width: 250px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Background dinâmico -->
-    <div class="result-background" id="gameBackground"></div>
-    
-    <div class="result-container">
-        <!-- Logo -->
-        <div class="result-logo">
-            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="60" cy="60" r="58" stroke="#2ecc71" stroke-width="4"/>
-                <path d="M40 40L80 40L70 60L80 80L40 80L50 60L40 40Z" fill="#2ecc71"/>
-                <text x="60" y="110" text-anchor="middle" fill="#ecf0f1" font-size="12" font-family="Montserrat, sans-serif" font-weight="700">
-                    ECO GAME AWARDS
-                </text>
-            </svg>
-        </div>
-        
-        <!-- Cabeçalho -->
-        <div class="result-header">
-            <h1>Ecológica Game Awards 2025</h1>
-            <div class="result-subtitle">Resumo das suas escolhas</div>
-        </div>
-        
-        <!-- Container dos top 3 jogos -->
-        <div class="top-games-container">
-            <!-- Card 1 (Anterior) -->
-            <div class="game-card prev" id="card-prev">
-                <div class="game-card-content">
-                    <div class="game-rank">
-                        <span class="rank-number">#2</span>
-                    </div>
-                    <h2 id="prev-game-name">Cyber Nature</h2>
-                    <div class="game-info" id="prev-game-info">Indicado em 3 categorias</div>
-                    <div class="game-stats">
-                        <span id="prev-game-votes">24</span>
-                        <small>votos</small>
-                    </div>
+    <!-- Header com Logo -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo-header">
+                <div class="logo-left">
+                    <img src="assets/images/logo-game-awards.png" alt="Game Awards Logo" class="logo">
                 </div>
-            </div>
-            
-            <!-- Card 2 (Ativo) -->
-            <div class="game-card active" id="card-active">
-                <div class="game-card-content">
-                    <div class="game-rank">
-                        <span class="rank-number">#1</span>
-                        <div class="crown-icon">👑</div>
-                    </div>
-                    <h2 id="active-game-name">Split Fiction</h2>
-                    <div class="game-info" id="active-game-info">Indicado em 4 categorias</div>
-                    <div class="game-stats">
-                        <span id="active-game-votes">29</span>
-                        <small>votos totais</small>
-                    </div>
-                    
-                    <!-- Detalhes do jogo -->
-                    <div class="game-details">
-                        <div class="detail-item">
-                            <span class="detail-label">Gênero</span>
-                            <span class="detail-value" id="detail-genre">Ação/Aventura</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Plataforma</span>
-                            <span class="detail-value" id="detail-platform">Multiplataforma</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Desenvolvedor</span>
-                            <span class="detail-value" id="detail-developer">Eco Studios</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Lançamento</span>
-                            <span class="detail-value" id="detail-release">Q4 2025</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Categorias</span>
-                            <span class="detail-value" id="detail-categories">Melhor Jogo, Arte, Narrativa, Inovação</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Card 3 (Próximo) -->
-            <div class="game-card next" id="card-next">
-                <div class="game-card-content">
-                    <div class="game-rank">
-                        <span class="rank-number">#3</span>
-                    </div>
-                    <h2 id="next-game-name">Echoes of Gaia</h2>
-                    <div class="game-info" id="next-game-info">Indicado em 5 categorias</div>
-                    <div class="game-stats">
-                        <span id="next-game-votes">21</span>
-                        <small>votos</small>
-                    </div>
+                <div class="title-center">
+                    <h1>ECOLÓGICA GAME AWARDS <span class="year">2025</span></h1>
+                    <p class="subtitle">Escolha os melhores jogos do ano em cada categoria</p>
                 </div>
             </div>
         </div>
-        
-        <!-- Controles de navegação -->
-        <div class="carousel-controls">
-            <button class="nav-btn" id="btn-prev">
-                <i class="fas fa-chevron-left"></i>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <!-- Navegação por Categorias -->
+        <div class="category-navigation" id="categoryNavigation">
+            <!-- As categorias serão inseridas via JavaScript -->
+        </div>
+
+        <!-- Container da Categoria Atual -->
+        <div class="current-category-container" id="currentCategoryContainer">
+            <!-- A categoria atual será carregada aqui -->
+        </div>
+
+        <!-- Controles de Navegação -->
+        <div class="navigation-controls" id="navigationControls">
+            <button class="nav-btn prev-btn" id="prevCategoryBtn" disabled>
+                <i class="fas fa-chevron-left"></i> Categoria Anterior
             </button>
             
-            <div class="dots-container" id="dots-container">
-                <span class="dot active" data-index="0"></span>
-                <span class="dot" data-index="1"></span>
-                <span class="dot" data-index="2"></span>
+            <div class="category-counter">
+                <span id="currentCategoryNumber">1</span> de <span id="totalCategories">30</span>
             </div>
             
-            <button class="nav-btn" id="btn-next">
-                <i class="fas fa-chevron-right"></i>
+            <button class="nav-btn next-btn" id="nextCategoryBtn">
+                Próxima Categoria <i class="fas fa-chevron-right"></i>
             </button>
         </div>
-        
-        <!-- Estatísticas gerais -->
-        <div class="stats-summary">
-            <div class="stat-item">
-                <span class="stat-number" id="total-categories">29</span>
-                <span class="stat-label">Categorias Votadas</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="unique-games">23</span>
-                <span class="stat-label">Jogos Únicos</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="total-votes">156</span>
-                <span class="stat-label">Votos Totais</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="completion">100%</span>
-                <span class="stat-label">Completude</span>
-            </div>
+
+        <!-- Botão Finalizar -->
+        <div class="submit-container">
+            <button class="submit-btn" id="finalizeVoteBtn" disabled>
+                <i class="fas fa-trophy"></i> FINALIZAR VOTAÇÃO
+            </button>
+            <p class="form-note">Você precisa selecionar uma opção em todas as categorias antes de finalizar.</p>
         </div>
-        
-        <!-- Seção "Preparando..." -->
-        <div class="preparing">
-            <i class="fas fa-sync-alt fa-spin"></i> PREPARANDO NOVOS RESULTADOS...
+
+        <!-- Progresso da Votação -->
+        <div class="voting-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-text">Categorias preenchidas: <span id="progressCount">0</span> de <span id="totalCategoriesCount">30</span></p>
         </div>
-        
-        <!-- Botão votar novamente -->
-        <a href="#" class="vote-again-btn">
-            <i class="fas fa-vote-yea"></i> VOTAR NOVAMENTE
-        </a>
-        
-        <!-- Botão de compartilhar -->
-        <button class="share-btn" id="share-btn">
-            <i class="fas fa-share-alt"></i>
-            Compartilhar Print
-        </button>
-    </div>
+    </main>
 
-    <script>
-        // Dados dos jogos
-        const topGames = [
-            {
-                id: 1,
-                name: "Split Fiction",
-                categories: 4,
-                votes: 29,
-                rank: 1,
-                genre: "Ação/Aventura",
-                platform: "Multiplataforma",
-                developer: "Eco Studios",
-                release: "Q4 2025",
-                awardCategories: "Melhor Jogo, Arte, Narrativa, Inovação",
-                backgroundImage: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1920&q=80",
-                description: "Uma jornada épica através de realidades alternativas onde suas escolhas moldam o destino de múltiplos universos."
-            },
-            {
-                id: 2,
-                name: "Cyber Nature",
-                categories: 3,
-                votes: 24,
-                rank: 2,
-                genre: "RPG/Ficção Científica",
-                platform: "PC, PS5, Xbox X",
-                developer: "NeoGreen Games",
-                release: "Q3 2025",
-                awardCategories: "Melhor RPG, Tecnologia, Design de Som",
-                backgroundImage: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&q=80",
-                description: "Em um futuro distópico, resta uma última esperança: restaurar a natureza através da tecnologia."
-            },
-            {
-                id: 3,
-                name: "Echoes of Gaia",
-                categories: 5,
-                votes: 21,
-                rank: 3,
-                genre: "Estratégia/Simulação",
-                platform: "PC, Nintendo Switch",
-                developer: "Earthbound Interactive",
-                release: "Q2 2025",
-                awardCategories: "Melhor Simulação, Impacto Social, Sustentabilidade",
-                backgroundImage: "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?w=1920&q=80",
-                description: "Construa e gerencie ecossistemas sustentáveis enquanto desvenda os segredos da natureza."
-            }
-        ];
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>Votação não oficial do Game Awards 2025. Todos os direitos das imagens e jogos são de seus respectivos proprietários.</p>
+        </div>
+    </footer>
 
-        let currentIndex = 0;
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', () => {
-            updateCarousel();
-            setupEventListeners();
-            updateBackground();
-            
-            // Animações iniciais
-            setTimeout(() => {
-                document.querySelector('.result-container').style.opacity = '1';
-            }, 100);
-        });
-
-        // Atualiza o carrossel
-        function updateCarousel() {
-            const games = getVisibleGames();
-            
-            // Atualiza card anterior
-            if (games.prev) {
-                document.getElementById('prev-game-name').textContent = games.prev.name;
-                document.getElementById('prev-game-info').textContent = `Indicado em ${games.prev.categories} categorias`;
-                document.getElementById('prev-game-votes').textContent = games.prev.votes;
-            }
-            
-            // Atualiza card ativo
-            const activeCard = document.getElementById('card-active');
-            document.getElementById('active-game-name').textContent = games.active.name;
-            document.getElementById('active-game-info').textContent = `Indicado em ${games.active.categories} categorias`;
-            document.getElementById('active-game-votes').textContent = games.active.votes;
-            
-            // Atualiza detalhes
-            document.getElementById('detail-genre').textContent = games.active.genre;
-            document.getElementById('detail-platform').textContent = games.active.platform;
-            document.getElementById('detail-developer').textContent = games.active.developer;
-            document.getElementById('detail-release').textContent = games.active.release;
-            document.getElementById('detail-categories').textContent = games.active.awardCategories;
-            
-            // Atualiza card próximo
-            if (games.next) {
-                document.getElementById('next-game-name').textContent = games.next.name;
-                document.getElementById('next-game-info').textContent = `Indicado em ${games.next.categories} categorias`;
-                document.getElementById('next-game-votes').textContent = games.next.votes;
-            }
-            
-            // Atualiza dots
-            updateDots();
-            
-            // Atualiza background
-            updateBackground();
-            
-            // Animação de transição
-            activeCard.style.transform = 'translateX(-50%) scale(0.95)';
-            setTimeout(() => {
-                activeCard.style.transform = 'translateX(-50%) scale(1)';
-            }, 50);
-        }
-
-        // Obtém os jogos visíveis
-        function getVisibleGames() {
-            const prevIndex = (currentIndex - 1 + topGames.length) % topGames.length;
-            const nextIndex = (currentIndex + 1) % topGames.length;
-            
-            return {
-                prev: topGames[prevIndex],
-                active: topGames[currentIndex],
-                next: topGames[nextIndex]
-            };
-        }
-
-        // Atualiza os dots de navegação
-        function updateDots() {
-            const dots = document.querySelectorAll('.dot');
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
-        }
-
-        // Atualiza o background
-        function updateBackground() {
-            const background = document.getElementById('gameBackground');
-            background.style.backgroundImage = `url('${topGames[currentIndex].backgroundImage}')`;
-            
-            // Adiciona overlay para melhor legibilidade
-            background.style.position = 'fixed';
-            background.style.top = '0';
-            background.style.left = '0';
-            background.style.width = '100%';
-            background.style.height = '100%';
-            background.style.zIndex = '-1';
-            background.style.opacity = '0.15';
-            background.style.backgroundSize = 'cover';
-            background.style.backgroundPosition = 'center';
-            background.style.filter = 'blur(8px)';
-            background.style.transition = 'background-image 0.8s ease';
-        }
-
-        // Configura os event listeners
-        function setupEventListeners() {
-            // Botões de navegação
-            document.getElementById('btn-prev').addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + topGames.length) % topGames.length;
-                updateCarousel();
-            });
-            
-            document.getElementById('btn-next').addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % topGames.length;
-                updateCarousel();
-            });
-            
-            // Dots de navegação
-            document.querySelectorAll('.dot').forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    if (index !== currentIndex) {
-                        currentIndex = index;
-                        updateCarousel();
-                    }
-                });
-            });
-            
-            // Cards clicáveis
-            document.getElementById('card-prev').addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + topGames.length) % topGames.length;
-                updateCarousel();
-            });
-            
-            document.getElementById('card-next').addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % topGames.length;
-                updateCarousel();
-            });
-            
-            // Botão de compartilhar (funcionalidade corrigida)
-            document.getElementById('share-btn').addEventListener('click', shareResults);
-            
-            // Navegação por teclado
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') {
-                    currentIndex = (currentIndex - 1 + topGames.length) % topGames.length;
-                    updateCarousel();
-                } else if (e.key === 'ArrowRight') {
-                    currentIndex = (currentIndex + 1) % topGames.length;
-                    updateCarousel();
-                }
-            });
-            
-            // Swipe para dispositivos móveis
-            let touchStartX = 0;
-            let touchEndX = 0;
-            
-            document.querySelector('.top-games-container').addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            });
-            
-            document.querySelector('.top-games-container').addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            });
-            
-            function handleSwipe() {
-                const swipeThreshold = 50;
-                const diff = touchStartX - touchEndX;
-                
-                if (Math.abs(diff) > swipeThreshold) {
-                    if (diff > 0) {
-                        // Swipe para esquerda
-                        currentIndex = (currentIndex + 1) % topGames.length;
-                    } else {
-                        // Swipe para direita
-                        currentIndex = (currentIndex - 1 + topGames.length) % topGames.length;
-                    }
-                    updateCarousel();
-                }
-            }
-        }
-
-        // Função para compartilhar resultados (CORRIGIDA)
-        async function shareResults() {
-            const shareBtn = document.getElementById('share-btn');
-            const originalText = shareBtn.innerHTML;
-            
-            try {
-                // Mostrar estado de carregamento
-                shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando Print...';
-                shareBtn.disabled = true;
-                
-                // Temporariamente esconder elementos interativos
-                const navControls = document.querySelector('.carousel-controls');
-                const voteBtn = document.querySelector('.vote-again-btn');
-                const originalControlsStyle = navControls.style.display;
-                const originalVoteStyle = voteBtn.style.display;
-                
-                navControls.style.display = 'none';
-                voteBtn.style.display = 'none';
-                
-                // Capturar a área do resultado
-                const resultContainer = document.querySelector('.result-container');
-                
-                // Configurações otimizadas para html2canvas
-                const canvas = await html2canvas(resultContainer, {
-                    backgroundColor: '#0c1a14',
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    logging: false,
-                    onclone: function(clonedDoc) {
-                        // Garantir que o clone tenha os mesmos estilos
-                        const clonedContainer = clonedDoc.querySelector('.result-container');
-                        clonedContainer.style.transform = 'none';
-                        clonedContainer.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.5)';
-                    }
-                });
-                
-                // Restaurar elementos
-                navControls.style.display = originalControlsStyle;
-                voteBtn.style.display = originalVoteStyle;
-                
-                // Converter para blob
-                canvas.toBlob(async (blob) => {
-                    const file = new File([blob], 'Resultados-Ecológica-Game-Awards.png', { 
-                        type: 'image/png',
-                        lastModified: Date.now()
-                    });
-                    
-                    // Tentar usar Web Share API
-                    if (navigator.share && navigator.canShare) {
-                        try {
-                            await navigator.share({
-                                files: [file],
-                                title: 'Meus Resultados - Ecológica Game Awards 2025',
-                                text: 'Confira meus resultados no Ecológica Game Awards 2025! 🌿🎮'
-                            });
-                        } catch (shareError) {
-                            // Fallback para download
-                            downloadImage(canvas);
-                        }
-                    } else {
-                        // Fallback para navegadores sem suporte
-                        downloadImage(canvas);
-                    }
-                    
-                    // Restaurar botão
-                    shareBtn.innerHTML = originalText;
-                    shareBtn.disabled = false;
-                    
-                }, 'image/png', 1.0);
-                
-            } catch (error) {
-                console.error('Erro ao gerar print:', error);
-                
-                // Restaurar botão
-                shareBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro ao Gerar';
-                shareBtn.disabled = false;
-                
-                setTimeout(() => {
-                    shareBtn.innerHTML = originalText;
-                    shareBtn.disabled = false;
-                }, 2000);
-                
-                alert('Houve um erro ao gerar o print. Por favor, tente novamente.');
-            }
-        }
-
-        // Função auxiliar para download da imagem
-        function downloadImage(canvas) {
-            const link = document.createElement('a');
-            link.download = `Ecológica-Game-Awards-Resultados-${new Date().getTime()}.png`;
-            link.href = canvas.toDataURL('image/png', 1.0);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Feedback visual
-            const originalText = document.getElementById('share-btn').innerHTML;
-            document.getElementById('share-btn').innerHTML = '<i class="fas fa-check"></i> Print Salvo!';
-            
-            setTimeout(() => {
-                document.getElementById('share-btn').innerHTML = originalText;
-            }, 2000);
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

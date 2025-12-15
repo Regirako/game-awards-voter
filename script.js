@@ -1170,22 +1170,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 mostVotedGame = game;
             }
         });
-        
-        // Preparar dados para resultados
-        const votingData = {
-            selections: selectedGames,
-            mostVoted: {
-                game: mostVotedGame,
-                count: maxVotes,
-                image: getGameImageUrl(mostVotedGame)
-            },
-            timestamp: new Date().toISOString()
-        };
-        
-        // Salvar e redirecionar
-        localStorage.setItem('gameAwardsVotes', JSON.stringify(votingData));
-        window.location.href = 'results.html';
-    }
+    
+    // Preparar dados para resultados - ATUALIZADO
+    const votingData = {
+        selections: selectedGames,
+        categories: categoriesData, // Adicionar categorias para referência
+        timestamp: new Date().toISOString()
+    };
+    
+    // Salvar e redirecionar
+    localStorage.setItem('gameAwardsVotes', JSON.stringify(votingData));
+    window.location.href = 'results.html';
+}
     
     // Função para obter URL da imagem do jogo
     function getGameImageUrl(gameName) {
@@ -1203,41 +1199,5 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Placeholder genérico com tamanho ajustado (400x200)
         return `https://via.placeholder.com/400x200/1a5e2c/ffffff?text=${encodeURIComponent(cleanGameName.substring(0, 30))}`;
-    }
-    // Função para finalizar votação (ATUALIZADA para enviar dados completos)
-    function finalizeVoting() {
-        // Verificar se todas as categorias foram preenchidas
-        if (completedCategories.size !== categoriesData.length) {
-            alert('Por favor, complete todas as categorias antes de finalizar.');
-            return;
-        }
-        
-        // Calcular jogos mais votados (top 3)
-        const voteCount = {};
-        Object.values(selectedGames).forEach(game => {
-            voteCount[game] = (voteCount[game] || 0) + 1;
-        });
-        
-        // Ordenar por votos e pegar top 3
-        const topGames = Object.entries(voteCount)
-            .map(([game, votes]) => ({ game, votes }))
-            .sort((a, b) => b.votes - a.votes)
-            .slice(0, 3);
-        
-        // Determinar jogo mais votado
-        const mostVoted = topGames.length > 0 ? topGames[0] : null;
-        
-        // Preparar dados para resultados
-        const votingData = {
-            selections: selectedGames,
-            mostVoted: mostVoted,
-            topGames: topGames,
-            timestamp: new Date().toISOString(),
-            totalCategories: categoriesData.length
-        };
-        
-        // Salvar e redirecionar
-        localStorage.setItem('gameAwardsVotes', JSON.stringify(votingData));
-        window.location.href = 'results.html';
     }
 });

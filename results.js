@@ -1,27 +1,28 @@
-// results.js - Lógica da página de resultados (ATUALIZADO)
+// results.js - Lógica da página de resultados (ATUALIZADO COM CARROSSEL)
 
 document.addEventListener('DOMContentLoaded', function() {
     // Elementos do DOM
-    const dynamicBackground = document.getElementById('dynamicBackground');
-    const carouselContainer = document.getElementById('carouselContainer');
-    const selectedGameName = document.getElementById('selectedGameName');
-    const selectedGameVotes = document.getElementById('selectedGameVotes');
-    const gameInfoGrid = document.getElementById('gameInfoGrid');
-    const totalCategoriesCount = document.getElementById('totalCategoriesCount');
-    const uniqueGamesCount = document.getElementById('uniqueGamesCount');
-    const totalVotesCount = document.getElementById('totalVotesCount');
-    const completionRate = document.getElementById('completionRate');
+    const carouselTrack = document.getElementById('carouselTrack');
+    const carouselIndicators = document.getElementById('carouselIndicators');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const mostVotedGame = document.getElementById('mostVotedGame');
+    const mostVotedCount = document.getElementById('mostVotedCount');
+    const categoriesCount = document.getElementById('categoriesCount');
+    const totalGames = document.getElementById('totalGames');
+    const mostVotesCount = document.getElementById('mostVotesCount');
+    const gameGenres = document.getElementById('gameGenres');
+    const gameSynopsis = document.getElementById('gameSynopsis');
+    const gameBackground = document.getElementById('gameBackground');
     const shareBtn = document.getElementById('shareBtn');
     const newVoteBtn = document.getElementById('newVoteBtn');
     const resultCard = document.getElementById('resultCard');
-    const carouselPrev = document.getElementById('carouselPrev');
-    const carouselNext = document.getElementById('carouselNext');
     
-    // Estado do carrossel
-    let currentCarouselIndex = 0;
-    let topGames = [];
+    // Dados do carrossel
+    let carouselItems = [];
+    let currentIndex = 0;
     
-    // Mapa de imagens (mesmo do script.js atualizado)
+    // Mapa de imagens (mesmo do script.js)
     const gameImages = {
         'Clair Obscur: Expedition 33': 'https://i.imgur.com/BdhoFqu.png',
         'Death Stranding 2: On the Beach': 'https://i.ytimg.com/vi/6cs-A1rNvEE/maxresdefault.jpg',
@@ -135,16 +136,22 @@ document.addEventListener('DOMContentLoaded', function() {
         'Troy Baker': 'https://m.media-amazon.com/images/M/MV5BZjA1YTcxNjktZDhhZi00NDhmLTkyZTYtZWY4OWVmZjA1ZTI4XkEyXkFqcGc@._V1_.jpg'
     };
     
-    // Informações detalhadas dos jogos
-    const gameDetails = {
-        'Split Fiction': {
-            genres: ['Ação', 'RPG', 'Ficção Científica'],
-            synopsis: 'Jogo de ação com múltiplas realidades e narrativa não-linear. Decisões do jogador afetam diretamente o desenrolar da história em diferentes dimensões.',
-            developer: 'Quantum Studios',
-            release: 'Q4 2025',
-            platform: 'PC, PS5, Xbox Series X/S'
-        }
-        // Adicione informações para outros jogos conforme necessário
+    // Informações dos jogos (para gêneros e sinopse)
+    const gameInfo = {
+        'Clair Obscur: Expedition 33': {
+            genres: ['RPG', 'Aventura', 'Fantasia'],
+            synopsis: 'RPG de fantasia com combate por turnos e narrativa cinematográfica. Jogadores exploram um mundo dividido entre luz e sombra, tomando decisões que afetam o destino dos personagens.'
+        },
+        'Death Stranding 2: On the Beach': {
+            genres: ['Ação', 'Aventura', 'Ficção Científica'],
+            synopsis: 'Sequência do aclamado jogo de Hideo Kojima. Continua a jornada de Sam Bridges em um mundo pós-apocalíptico, focando em conexões humanas e entregas em paisagens surrealistas.'
+        },
+        'Hades 2': {
+            genres: ['Roguelike', 'Ação', 'Mitologia'],
+            synopsis: 'Sequência do premiado rogue-like, agora com Melinoë, princesa do submundo, como protagonista. Combate dinâmico, narrativa profunda e deuses gregos revisitados.'
+        },
+        // ... (adicionar todas as outras informações dos jogos conforme necessário)
+        // Manter todas as informações do script.js original
     };
     
     // Recuperar dados da votação
@@ -157,16 +164,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    const { selections, mostVoted } = votingData;
+    const { selections } = votingData;
     
-    // Calcular top 3 jogos mais votados
-    calculateTopGames(selections);
+    // Calcular os 3 jogos mais votados
+    const topGames = calculateTopGames(selections);
     
-    // Inicializar interface
-    initializeInterface(selections, mostVoted);
+    // Inicializar carrossel com os 3 jogos mais votados
+    initializeCarousel(topGames);
     
-    // Configurar botões e eventos
-    setupEventListeners();
+    // Atualizar estatísticas
+    updateStats(selections, topGames);
+    
+    // Configurar botões
+    setupButtons();
+    
+    // Configurar carrossel
+    setupCarousel();
     
     // Função para calcular os 3 jogos mais votados
     function calculateTopGames(selections) {
@@ -177,151 +190,140 @@ document.addEventListener('DOMContentLoaded', function() {
             voteCount[game] = (voteCount[game] || 0) + 1;
         });
         
-        // Converter para array e ordenar por votos
-        topGames = Object.entries(voteCount)
+        // Converter para array e ordenar
+        const gamesArray = Object.entries(voteCount)
             .map(([game, votes]) => ({ game, votes }))
-            .sort((a, b) => b.votes - a.votes)
-            .slice(0, 3);
+            .sort((a, b) => b.votes - a.votes);
         
-        // Garantir que sempre tenha 3 itens
-        while (topGames.length < 3) {
-            topGames.push({ 
-                game: `Jogo ${topGames.length + 1}`, 
-                votes: 0 
-            });
-        }
-    }
-    
-    // Função para inicializar a interface
-    function initializeInterface(selections, mostVoted) {
-        // Configurar background dinâmico
-        if (mostVoted && mostVoted.game) {
-            const bgImage = getGameImageUrl(mostVoted.game);
-            dynamicBackground.style.backgroundImage = `url('${bgImage}')`;
+        // Pegar os 3 primeiros (ou menos se houver menos jogos)
+        const topGames = gamesArray.slice(0, 3);
+        
+        // Se houver menos de 3 jogos, preencher com os mais votados repetidos
+        while (topGames.length < 3 && topGames.length > 0) {
+            topGames.push({...topGames[0]});
         }
         
-        // Inicializar carrossel
-        initializeCarousel();
-        
-        // Exibir detalhes do jogo selecionado
-        updateGameDetails(topGames[0]);
-        
-        // Atualizar estatísticas
-        updateStats(selections);
+        return topGames;
     }
     
     // Função para inicializar o carrossel
-    function initializeCarousel() {
-        carouselContainer.innerHTML = '';
+    function initializeCarousel(topGames) {
+        carouselItems = topGames;
         
-        topGames.forEach((gameData, index) => {
-            const card = document.createElement('div');
-            card.className = `carousel-card ${index === 0 ? 'active' : index === 1 ? 'right' : 'left'}`;
-            card.dataset.index = index;
+        // Limpar carrossel
+        carouselTrack.innerHTML = '';
+        carouselIndicators.innerHTML = '';
+        
+        // Criar itens do carrossel
+        carouselItems.forEach((item, index) => {
+            const imageUrl = getGameImageUrl(item.game);
             
-            const imageUrl = getGameImageUrl(gameData.game);
-            
-            card.innerHTML = `
-                <div class="carousel-rank">${index + 1}</div>
-                <div class="carousel-image">
-                    <img src="${imageUrl}" 
-                         alt="${gameData.game}"
-                         onerror="this.src='https://via.placeholder.com/300x140/1a5e2c/ffffff?text=${encodeURIComponent(gameData.game.substring(0, 30))}'">
-                </div>
-                <div class="carousel-content">
-                    <div class="carousel-game-name">${gameData.game}</div>
-                    <div class="carousel-vote-count">${gameData.votes} ${gameData.votes === 1 ? 'categoria' : 'categorias'}</div>
-                </div>
+            // Criar item do carrossel
+            const carouselItem = document.createElement('div');
+            carouselItem.className = `carousel-item ${index === 0 ? 'active' : index === 1 ? 'right' : 'left'}`;
+            carouselItem.dataset.index = index;
+            carouselItem.dataset.game = item.game;
+            carouselItem.innerHTML = `
+                <img src="${imageUrl}" 
+                     alt="${item.game}"
+                     onerror="this.src='https://via.placeholder.com/380x220/1a5e2c/ffffff?text=${encodeURIComponent(item.game.substring(0, 30))}'">
             `;
             
-            card.addEventListener('click', () => {
-                if (index !== currentCarouselIndex) {
-                    goToCarouselIndex(index);
-                }
-            });
+            carouselTrack.appendChild(carouselItem);
             
-            carouselContainer.appendChild(card);
+            // Criar indicador
+            const indicator = document.createElement('div');
+            indicator.className = `carousel-indicator ${index === 0 ? 'active' : ''}`;
+            indicator.dataset.index = index;
+            indicator.addEventListener('click', () => goToSlide(index));
+            carouselIndicators.appendChild(indicator);
         });
+        
+        // Atualizar informações do primeiro jogo
+        updateGameInfo(0);
+        
+        // Atualizar background com o jogo mais votado
+        updateBackground(carouselItems[0].game);
     }
     
-    // Função para atualizar detalhes do jogo
-    function updateGameDetails(gameData) {
-        if (!gameData) return;
+    // Função para atualizar informações do jogo
+    function updateGameInfo(index) {
+        if (index < 0 || index >= carouselItems.length) return;
         
-        selectedGameName.textContent = gameData.game;
-        selectedGameVotes.textContent = `Indicado em ${gameData.votes} ${gameData.votes === 1 ? 'categoria' : 'categorias'}`;
+        const game = carouselItems[index];
+        const gameName = game.game;
+        const votes = game.votes;
         
-        // Informações detalhadas do jogo
-        const details = gameDetails[gameData.game] || {
-            genres: ['Gênero não disponível'],
-            synopsis: 'Informações detalhadas não disponíveis para este jogo.',
-            developer: 'Desenvolvedor não especificado',
-            release: 'Data não anunciada',
-            platform: 'Plataformas não definidas'
-        };
+        // Atualizar título
+        mostVotedGame.textContent = gameName;
         
-        gameInfoGrid.innerHTML = `
-            <div class="info-card">
-                <div class="info-icon"><i class="fas fa-gamepad"></i></div>
-                <div class="info-value">${details.genres.slice(0, 2).join(', ')}</div>
-                <div class="info-label">Gêneros</div>
-            </div>
-            <div class="info-card">
-                <div class="info-icon"><i class="fas fa-building"></i></div>
-                <div class="info-value">${details.developer}</div>
-                <div class="info-label">Desenvolvedor</div>
-            </div>
-            <div class="info-card">
-                <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
-                <div class="info-value">${details.release}</div>
-                <div class="info-label">Lançamento</div>
-            </div>
-            <div class="info-card">
-                <div class="info-icon"><i class="fas fa-desktop"></i></div>
-                <div class="info-value">${details.platform}</div>
-                <div class="info-label">Plataformas</div>
-            </div>
-        `;
+        // Atualizar contagem de votos
+        const categoryText = votes === 1 ? 
+            '1 categoria' : 
+            `${votes} categorias`;
+        mostVotedCount.textContent = `Indicado em ${categoryText}`;
+        
+        // Atualizar contador de votos
+        mostVotesCount.textContent = votes;
+        
+        // Atualizar gêneros
+        updateGameGenres(gameName);
+        
+        // Atualizar sinopse
+        updateGameSynopsis(gameName);
+        
+        // Atualizar background
+        updateBackground(gameName);
+    }
+    
+    // Função para atualizar gêneros do jogo
+    function updateGameGenres(gameName) {
+        const info = gameInfo[gameName] || { genres: [] };
+        gameGenres.innerHTML = '';
+        
+        if (info.genres && info.genres.length > 0) {
+            info.genres.slice(0, 3).forEach(genre => {
+                const genreTag = document.createElement('span');
+                genreTag.className = 'game-genre-tag';
+                genreTag.textContent = genre;
+                gameGenres.appendChild(genreTag);
+            });
+        } else {
+            const noGenre = document.createElement('span');
+            noGenre.className = 'game-genre-tag';
+            noGenre.textContent = 'Gênero não disponível';
+            gameGenres.appendChild(noGenre);
+        }
+    }
+    
+    // Função para atualizar sinopse do jogo
+    function updateGameSynopsis(gameName) {
+        const info = gameInfo[gameName] || { synopsis: 'Sinopse não disponível.' };
+        gameSynopsis.textContent = info.synopsis;
+    }
+    
+    // Função para atualizar background
+    function updateBackground(gameName) {
+        const imageUrl = getGameImageUrl(gameName);
+        gameBackground.style.backgroundImage = `url('${imageUrl}')`;
     }
     
     // Função para atualizar estatísticas
-    function updateStats(selections) {
-        const categoriesCount = Object.keys(selections).length;
-        const uniqueGames = new Set(Object.values(selections)).size;
-        const totalVotes = Object.values(selections).length;
-        const completionPercentage = Math.round((categoriesCount / 30) * 100);
+    function updateStats(selections, topGames) {
+        // Contar categorias votadas
+        categoriesCount.textContent = Object.keys(selections).length;
         
-        totalCategoriesCount.textContent = categoriesCount;
-        uniqueGamesCount.textContent = uniqueGames;
-        totalVotesCount.textContent = totalVotes;
-        completionRate.textContent = `${completionPercentage}%`;
+        // Contar total de jogos únicos votados
+        const uniqueGames = new Set(Object.values(selections));
+        totalGames.textContent = uniqueGames.size;
+        
+        // Contar votos do jogo mais votado
+        if (topGames.length > 0) {
+            mostVotesCount.textContent = topGames[0].votes;
+        }
     }
     
-    // Função para navegar no carrossel
-    function goToCarouselIndex(index) {
-        const cards = document.querySelectorAll('.carousel-card');
-        const newIndex = (index + topGames.length) % topGames.length;
-        
-        // Atualizar classes dos cards
-        cards.forEach((card, i) => {
-            card.className = 'carousel-card';
-            
-            if (i === newIndex) {
-                card.classList.add('active');
-            } else if (i === (newIndex + 1) % topGames.length) {
-                card.classList.add('right');
-            } else {
-                card.classList.add('left');
-            }
-        });
-        
-        currentCarouselIndex = newIndex;
-        
-        // Atualizar detalhes do jogo
-        updateGameDetails(topGames[newIndex]);
-    }
-    
-    // Função para obter URL da imagem
+    // Função para obter URL da imagem do jogo
     function getGameImageUrl(gameName) {
         // Verifica se há URL específica no mapa
         if (gameImages[gameName]) {
@@ -335,35 +337,85 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Placeholder genérico
-        return `https://via.placeholder.com/300x140/1a5e2c/ffffff?text=${encodeURIComponent(cleanGameName.substring(0, 30))}`;
+        return `https://via.placeholder.com/380x220/1a5e2c/ffffff?text=${encodeURIComponent(cleanGameName.substring(0, 30))}`;
     }
     
-    // Configurar event listeners
-    function setupEventListeners() {
-        // Navegação do carrossel
-        carouselPrev.addEventListener('click', () => {
-            goToCarouselIndex(currentCarouselIndex - 1);
+    // Configurar funcionalidades do carrossel
+    function setupCarousel() {
+        // Botão anterior
+        prevBtn.addEventListener('click', () => {
+            goToSlide(currentIndex - 1);
         });
         
-        carouselNext.addEventListener('click', () => {
-            goToCarouselIndex(currentCarouselIndex + 1);
+        // Botão próximo
+        nextBtn.addEventListener('click', () => {
+            goToSlide(currentIndex + 1);
         });
         
-        // Botão de screenshot - CORRIGIDO
-        shareBtn.addEventListener('click', captureScreenshot);
-        
-        // Botão de nova votação
-        newVoteBtn.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
-        
-        // Adicionar suporte a teclado
+        // Navegação por teclado
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
-                goToCarouselIndex(currentCarouselIndex - 1);
+                goToSlide(currentIndex - 1);
             } else if (e.key === 'ArrowRight') {
-                goToCarouselIndex(currentCarouselIndex + 1);
+                goToSlide(currentIndex + 1);
             }
+        });
+        
+        // Auto-rotacionar (opcional)
+        // setInterval(() => {
+        //     goToSlide(currentIndex + 1);
+        // }, 5000);
+    }
+    
+    // Função para ir para um slide específico
+    function goToSlide(index) {
+        if (carouselItems.length === 0) return;
+        
+        // Ajustar índice para circular
+        if (index < 0) index = carouselItems.length - 1;
+        if (index >= carouselItems.length) index = 0;
+        
+        // Atualizar índice atual
+        currentIndex = index;
+        
+        // Atualizar classes dos itens do carrossel
+        const items = carouselTrack.querySelectorAll('.carousel-item');
+        items.forEach((item, i) => {
+            item.classList.remove('active', 'left', 'right');
+            
+            if (i === index) {
+                item.classList.add('active');
+            } else if (i === (index + 1) % carouselItems.length) {
+                item.classList.add('right');
+            } else if (i === (index - 1 + carouselItems.length) % carouselItems.length) {
+                item.classList.add('left');
+            } else {
+                // Para mais de 3 itens, esconder os outros
+                item.style.opacity = '0';
+                item.style.zIndex = '1';
+            }
+        });
+        
+        // Atualizar indicadores
+        const indicators = carouselIndicators.querySelectorAll('.carousel-indicator');
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+        });
+        
+        // Atualizar informações do jogo
+        updateGameInfo(index);
+    }
+    
+    // Configurar botões de ação
+    function setupButtons() {
+        // Botão de compartilhar (screenshot melhorada)
+        shareBtn.addEventListener('click', function() {
+            captureScreenshot();
+        });
+        
+        // Botão de nova votação
+        newVoteBtn.addEventListener('click', function() {
+            window.location.href = 'index.html';
         });
     }
     
@@ -371,21 +423,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function captureScreenshot() {
         // Verificar se html2canvas está carregado
         if (typeof html2canvas === 'undefined') {
-            alert('A funcionalidade de captura está carregando. Por favor, tente novamente em alguns segundos.');
+            alert('A funcionalidade de compartilhamento está carregando. Por favor, tente novamente em alguns segundos.');
             return;
         }
         
         // Desabilitar botão e mostrar feedback
         const originalText = shareBtn.innerHTML;
-        shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Capturando...';
+        shareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparando screenshot...';
         shareBtn.disabled = true;
         
-        // Temporariamente esconder botões de navegação do carrossel
-        const carouselNavs = document.querySelectorAll('.carousel-nav');
-        const originalNavStyles = [];
-        carouselNavs.forEach(nav => {
-            originalNavStyles.push(nav.style.display);
-            nav.style.display = 'none';
+        // Temporariamente remover animações para melhor screenshot
+        const animatedElements = document.querySelectorAll('.most-voted-section, .carousel-item, .stat-card');
+        animatedElements.forEach(el => {
+            el.style.animation = 'none';
         });
         
         // Configurações otimizadas para html2canvas
@@ -396,53 +446,42 @@ document.addEventListener('DOMContentLoaded', function() {
             logging: false,
             allowTaint: true,
             removeContainer: true,
+            foreignObjectRendering: true,
             onclone: function(clonedDoc) {
-                // Ajustar estilos no clone para screenshot
+                // Melhorar aparência no clone para screenshot
                 const clonedCard = clonedDoc.getElementById('resultCard');
-                const clonedBody = clonedDoc.body;
-                
                 if (clonedCard) {
-                    // Remover scrollbar
-                    clonedCard.style.overflow = 'visible';
-                    clonedCard.style.maxHeight = 'none';
-                    
-                    // Aumentar sombra para destaque
-                    clonedCard.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.7), 0 0 100px rgba(46, 204, 113, 0.4)';
-                    
-                    // Destacar borda
+                    clonedCard.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.6)';
                     clonedCard.style.border = '3px solid var(--gold)';
-                    
-                    // Remover animação pulsante
-                    const detailsSection = clonedDoc.querySelector('.game-details-section');
-                    if (detailsSection) {
-                        detailsSection.style.animation = 'none';
-                    }
+                    clonedCard.style.transform = 'translateY(0)';
                 }
                 
-                if (clonedBody) {
-                    // Garantir que o fundo está visível
-                    clonedBody.style.background = 'radial-gradient(ellipse at top, #0a2810 0%, #0a2010 100%)';
+                // Remover qualquer elemento que possa atrapalhar
+                const buttons = clonedDoc.querySelectorAll('.action-btn');
+                buttons.forEach(btn => {
+                    btn.style.transform = 'translateY(0)';
+                    btn.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
+                });
+                
+                // Garantir que o carrossel esteja visível
+                const carouselItem = clonedDoc.querySelector('.carousel-item.active');
+                if (carouselItem) {
+                    carouselItem.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.8)';
                 }
             }
         };
         
-        // Capturar screenshot após pequeno delay
+        // Pequeno delay para garantir que tudo está renderizado
         setTimeout(() => {
             html2canvas(resultCard, config)
                 .then(canvas => {
-                    // Restaurar navegação do carrossel
-                    carouselNavs.forEach((nav, index) => {
-                        nav.style.display = originalNavStyles[index];
-                    });
-                    
                     // Converter para data URL
                     const imageData = canvas.toDataURL('image/png', 1.0);
                     
                     // Criar link para download
                     const link = document.createElement('a');
                     const date = new Date();
-                    const fileName = `Game-Awards-Result-${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}-${date.getHours()}${date.getMinutes()}${date.getSeconds()}.png`;
-                    
+                    const fileName = `Game-Awards-Result-${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}-${date.getHours()}${date.getMinutes()}.png`;
                     link.download = fileName;
                     link.href = imageData;
                     
@@ -451,19 +490,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     link.click();
                     document.body.removeChild(link);
                     
+                    // Restaurar animações
+                    animatedElements.forEach(el => {
+                        el.style.animation = '';
+                    });
+                    
                     // Restaurar botão
                     shareBtn.innerHTML = originalText;
                     shareBtn.disabled = false;
                     
                     // Mostrar notificação
-                    showNotification('Screenshot salvo com sucesso! Verifique sua pasta de downloads.', 'success');
+                    showNotification('Screenshot salvo com sucesso! Verifique sua pasta de downloads.');
                     
                 }).catch(error => {
                     console.error('Erro ao capturar screenshot:', error);
                     
-                    // Restaurar navegação do carrossel
-                    carouselNavs.forEach((nav, index) => {
-                        nav.style.display = originalNavStyles[index];
+                    // Restaurar animações
+                    animatedElements.forEach(el => {
+                        el.style.animation = '';
                     });
                     
                     // Restaurar botão
@@ -471,53 +515,53 @@ document.addEventListener('DOMContentLoaded', function() {
                     shareBtn.disabled = false;
                     
                     // Mensagem alternativa
-                    showNotification('Erro ao capturar screenshot. Use a ferramenta de print do seu navegador (Ctrl+P).', 'error');
+                    showNotification('Erro ao capturar. Use Ctrl+P para salvar como PDF ou Print Screen para capturar manualmente.');
                 });
-        }, 1000);
+        }, 500);
     }
     
     // Mostrar notificação
-    function showNotification(message, type = 'success') {
+    function showNotification(message) {
         // Remover notificações anteriores
         const existingNotifications = document.querySelectorAll('.custom-notification');
         existingNotifications.forEach(notification => notification.remove());
         
         const notification = document.createElement('div');
         notification.className = 'custom-notification';
-        
-        const bgColor = type === 'success' 
-            ? 'linear-gradient(135deg, var(--accent-green), var(--secondary-green))' 
-            : 'linear-gradient(135deg, #ff6b6b, #c44569)';
-        
         notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: ${bgColor};
+            background: linear-gradient(135deg, var(--accent-green), var(--secondary-green));
             color: white;
             padding: 15px 25px;
             border-radius: 12px;
             z-index: 10000;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            animation: slideInRight 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            animation: slideInRight 0.3s ease-out;
             font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
+            font-weight: 700;
             max-width: 350px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(15px);
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            text-align: center;
         `;
         
-        const icon = type === 'success' ? 'check-circle' : 'exclamation-triangle';
-        
         notification.innerHTML = `
-            <i class="fas fa-${icon}" style="font-size: 1.2rem;"></i>
-            <span>${message}</span>
+            <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+            ${message}
         `;
         
         document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 4000);
         
         // Adicionar animações CSS se necessário
         if (!document.querySelector('#notification-styles')) {
@@ -526,42 +570,32 @@ document.addEventListener('DOMContentLoaded', function() {
             style.textContent = `
                 @keyframes slideInRight {
                     from {
-                        transform: translateX(100%) scale(0.8);
+                        transform: translateX(100%);
                         opacity: 0;
                     }
                     to {
-                        transform: translateX(0) scale(1);
+                        transform: translateX(0);
                         opacity: 1;
                     }
                 }
                 
                 @keyframes slideOutRight {
                     from {
-                        transform: translateX(0) scale(1);
+                        transform: translateX(0);
                         opacity: 1;
                     }
                     to {
-                        transform: translateX(100%) scale(0.8);
+                        transform: translateX(100%);
                         opacity: 0;
                     }
                 }
             `;
             document.head.appendChild(style);
         }
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease-in forwards';
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    document.body.removeChild(notification);
-                }
-            }, 300);
-        }, 4000);
     }
     
     // Garantir que o card esteja completamente visível
     setTimeout(() => {
         resultCard.scrollTop = 0;
-        resultCard.style.animation = 'none';
     }, 100);
 });
